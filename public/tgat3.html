@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TGAT3 Future Workforce Competencies — Pharmacy TCAS Simulator</title>
+    <meta name="description" content="ระบบจำลองข้อสอบ TGAT3 สมรรถนะการทำงานในอนาคต สำหรับเตรียมสอบแพทย์-เภสัชศาสตร์ TCAS 2570">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&family=Sarabun:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <div class="container" id="app-container">
+        <!-- Start Screen -->
+        <div id="start-screen">
+            <h1>
+                <span class="accent-text">TGAT3</span> <br>
+                <span class="purple-text">Future Workforce Competencies</span>
+            </h1>
+            <p>
+                ระบบจำลองข้อสอบสมรรถนะการทำงานในอนาคตและการประเมินทัศนคติวิชาชีพ<br>
+                จำลองเนื้อหา ทัศนคติ และจริยธรรมทางการแพทย์ตามรูปแบบข้อสอบจริง 60 ข้อ 60 นาที
+            </p>
+
+            <div class="rules-card">
+                <ul>
+                    <li><strong>โครงสร้างข้อสอบ:</strong> 60 ข้อ ครอบคลุม 4 สมรรถนะหลัก ได้แก่ การคิดแก้ปัญหา, การสื่อสารและการร่วมมือ, จริยธรรมและวิชาชีพวิชาชีพสุขภาพ, ความยืดหยุ่นและการปรับตัว</li>
+                    <li><strong>วิธีการให้คะแนน:</strong> ข้อสอบจริงจะประเมินคะแนนไล่เลี่ยกันตามความถูกต้องของ Mindset (ตั้งแต่ 0, 0.25, 0.50, 0.75 ถึง 1.00 คะแนน) แต่ในเครื่องจำลองจะเน้นข้อเลือกที่ดีที่สุด (Best Match) เพื่อสร้างความเข้าใจ Mindset สูงสุด</li>
+                    <li><strong>เป้าหมายสำหรับเภสัชกร:</strong> คะแนนรวมควรได้มากกว่า 80% (48/60 ข้อขึ้นไป) เพื่อขยับเข้าใกล้เป้าหมายสูงสุด</li>
+                </ul>
+            </div>
+
+            <div style="display: flex; gap: 20px; flex-wrap: wrap; justify-content: center; margin-top: 15px;">
+                <a href="tgat3-study.html" class="btn-neon"
+                    style="background: linear-gradient(135deg, var(--warning), var(--neon-purple)); box-shadow: 0 0 20px rgba(245, 158, 11, 0.4); text-decoration: none;">📖
+                    อ่านสรุปเนื้อหาก่อนสอบ</a>
+                <button class="btn-neon" onclick="startExam()">⚡ เริ่มทำข้อสอบทันที</button>
+            </div>
+            <div style="margin-top: 10px;">
+                <a href="/" class="btn-action" style="text-decoration: none;">← กลับหน้า Hub</a>
+            </div>
+        </div>
+
+        <!-- Quiz Screen -->
+        <div id="quiz-screen" style="display: none;">
+            <div class="quiz-container">
+                <!-- Sidebar with timer & grid navigation -->
+                <div class="sidebar">
+                    <div class="timer-card">
+                        <div
+                            style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 5px; text-transform: uppercase;">
+                            Time Remaining</div>
+                        <div id="timer">60:00</div>
+                    </div>
+                    <div>
+                        <h3
+                            style="font-size: 0.95rem; color: var(--neon-blue); margin-bottom: 12px; text-align: center;">
+                            QUESTION MATRIX</h3>
+                        <div class="question-grid" id="q-matrix">
+                            <!-- Filled by JS -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Main Question & Interaction workarea -->
+                <div class="workarea">
+                    <div class="quiz-header">
+                        <div>
+                            <h2 id="section-title" style="font-size: 1.15rem; color: var(--neon-blue);">PART 1: PROBLEM SOLVING</h2>
+                            <div id="question-index-label"
+                                style="font-size: 0.9rem; color: var(--text-muted); margin-top: 4px;">Question 1 of 60
+                            </div>
+                        </div>
+                        <div id="time-suggest" style="font-size: 0.9rem; color: var(--warning); font-weight: 600;">
+                            Suggested Time: 45s</div>
+                    </div>
+
+                    <div class="progress-bar-container">
+                        <div class="progress-bar-fill" id="progress-bar"></div>
+                    </div>
+
+                    <!-- Dynamic question layout -->
+                    <div id="dynamic-question-layout">
+                        <!-- Loaded dynamically -->
+                    </div>
+
+                    <div class="feedback-actions">
+                        <button class="btn-action" id="submit-ans-btn" onclick="submitAnswer()" disabled>Confirm
+                            Answer</button>
+                        <button class="btn-action" id="next-btn" onclick="nextQuestion()" style="display: none;">Next
+                            Question</button>
+                    </div>
+
+                    <!-- Hidden until answer submitted -->
+                    <div class="explanation-panel" id="explanation-panel" style="display: none;">
+                        <div class="explanation-title">📝 Explanation & Assessment</div>
+                        <div class="detail-row">
+                            <div class="detail-label">เฉลยละเอียด:</div>
+                            <div id="explanation-correct">...</div>
+                        </div>
+                        <div class="detail-row">
+                            <div class="detail-label">ทำไมข้ออื่นผิด:</div>
+                            <div id="explanation-wrong">...</div>
+                        </div>
+                        <div class="detail-row"
+                            style="border-top: 1px solid rgba(148, 163, 184, 0.1); padding-top: 12px;">
+                            <div class="detail-label" style="color: var(--success);">Mindset ที่ถูกต้อง:</div>
+                            <div id="explanation-mindset">...</div>
+                        </div>
+                        <div class="detail-row">
+                            <div class="detail-label" style="color: var(--neon-blue);">Speed Hack:</div>
+                            <div id="explanation-hack">...</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Result Screen -->
+        <div id="result-screen" style="display: none;">
+            <div class="result-header">
+                <h1 class="accent-text" style="font-size: 2.5rem; font-weight: 800;">Exam Evaluation Completed</h1>
+                <p style="color: var(--text-muted); margin-top: 10px;">
+                    รายงานประเมินสมรรถนะการทำงานในอนาคตและวิเคราะห์ทัศนคติวิชาชีพของท่าน</p>
+
+                <div class="score-circle-container">
+                    <div class="score-circle">
+                        <span class="score-number" id="final-score">0</span>
+                        <span class="score-total">out of 60</span>
+                    </div>
+                </div>
+
+                <div id="readiness-banner" class="readiness-banner">Evaluating...</div>
+            </div>
+
+            <div class="results-grid">
+                <!-- Left Side: Bar Charts -->
+                <div class="stat-card">
+                    <h3 class="stat-title">Sectional Performance</h3>
+                    <div id="sectional-charts-container">
+                        <!-- Section scores rendered here -->
+                    </div>
+                </div>
+
+                <!-- Right Side: Personal weakness & tips -->
+                <div class="stat-card">
+                    <h3 class="stat-title">Weak-Point Analysis & Competency Profile</h3>
+                    <div class="analysis-text" id="weakness-analysis">
+                        <!-- Dynamic analysis loaded here -->
+                    </div>
+                </div>
+            </div>
+
+            <div class="btn-restart-container">
+                <button class="btn-neon" onclick="resetExam()">Restart Exam</button>
+                <a href="/" class="btn-action" style="text-decoration: none; margin-left: 15px;">← กลับหน้า Hub</a>
+            </div>
+        </div>
+    </div>
+
+    <script src="tgat3-script.js"></script>
+</body>
+
+</html>
