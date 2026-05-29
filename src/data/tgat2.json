@@ -1,0 +1,20 @@
+[
+  {
+    "section": "Critical Thinking",
+    "partTitle": "Part 1: Logical Reasoning",
+    "suggestedTime": "1 Min",
+    "text": "ถ้า A > B และ B > C ข้อใดสรุปได้ถูกต้องที่สุด",
+    "passage": null,
+    "options": [
+      "A > C",
+      "C > A",
+      "A = C",
+      "สรุปไม่ได้"
+    ],
+    "answer": 0,
+    "correctExplanation": "จากหลักตรรกศาสตร์พื้นฐาน ถ้ายอมรับว่า A > B และ B > C จะต้องสรุปได้ว่า A > C",
+    "wrongExplanation": "ตัวเลือกอื่นขัดแย้งกับหลักการถ่ายทอด",
+    "mindset": "ใช้หลักการถ่ายทอดในวิชาคณิตศาสตร์เบื้องต้น",
+    "speedHack": "เชื่อมเครื่องหมาย > แบบทอดๆ"
+  }
+]
