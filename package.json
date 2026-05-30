@@ -3,11 +3,12 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev -p 3001",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "validate": "node scripts/validateQuestions.js"
+    "validate": "node scripts/validateQuestions.js",
+    "validate-data": "npx tsx scripts/validateQuestions.ts"
   },
   "dependencies": {
     "clsx": "^2.1.1",

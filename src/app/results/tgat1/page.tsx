@@ -1,110 +1,134 @@
 "use client";
 
-import React, { useMemo } from "react";
-import Link from "next/link";
+import React, { useEffect, useState } from "react";
 import { useExamStore } from "@/store/examStore";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
+import { ArrowLeft, RefreshCw, BarChart2, Clock, CheckCircle, Target, TrendingUp } from "lucide-react";
+import { calculateScore, getAccuracyByTopic, getAccuracyByDifficulty, getTimeAnalysis } from "@/lib/scoring";
+import { getProgressTrend, getReadinessLevel } from "@/lib/analytics";
 import ScoreChart from "@/components/results/ScoreChart";
-import TopicBreakdown from "@/components/results/TopicBreakdown";
 import ProgressGraph from "@/components/results/ProgressGraph";
-import { ArrowLeft, BookOpen, RefreshCw, Compass } from "lucide-react";
+import TopicBreakdown from "@/components/results/TopicBreakdown";
 
-export default function TGAT1ResultsPage() {
-  const { score, questions, answers, getHistory, resetExam } = useExamStore();
+export default function TGAT1ResultPage() {
+  const router = useRouter();
+  const { questions, answers, score, timeRemaining, examMode, perQuestionTime, getHistory } = useExamStore();
+  const [mounted, setMounted] = useState(false);
 
-  const total = questions.length || 60; // fallback standard size
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
-  // Compute topic scores
-  const topicScores = useMemo(() => {
-    if (questions.length === 0) return [];
-    const map: Record<string, { correct: number; total: number }> = {};
-    
-    questions.forEach((q, idx) => {
-      const topic = q.topic || "General";
-      if (!map[topic]) {
-        map[topic] = { correct: 0, total: 0 };
-      }
-      map[topic].total++;
-      if (answers[idx] === q.answer) {
-        map[topic].correct++;
-      }
-    });
+  if (!mounted) return null;
 
-    return Object.entries(map).map(([topic, stats]) => ({
-      topic,
-      correct: stats.correct,
-      total: stats.total,
-      percentage: Math.round((stats.correct / stats.total) * 100) || 0,
-    }));
-  }, [questions, answers]);
+  if (questions.length === 0) {
+    return (
+      <div className="min-h-screen bg-[#050b14] flex flex-col items-center justify-center text-white">
+        <p className="text-xl mb-4">No recent exam data found.</p>
+        <Link href="/tgat1" className="text-neon-blue underline">Go take the exam</Link>
+      </div>
+    );
+  }
 
-  const examHistory = useMemo(() => getHistory("tgat1"), [getHistory]);
+  const topicScores = getAccuracyByTopic(questions, answers);
+  const diffScores = getAccuracyByDifficulty(questions, answers);
+  const history = getHistory("tgat1");
+  const progress = getProgressTrend(history);
+  
+  const percentage = Math.round((score / questions.length) * 100);
+  const readiness = getReadinessLevel(percentage);
+
+  // Time Analysis
+  const totalTimeSpent = questions.length > 0 ? (examMode === 'exam' ? 3600 - timeRemaining : Object.values(perQuestionTime).reduce((a,b)=>a+b, 0)) : 0;
+  const timeMins = Math.floor(totalTimeSpent / 60);
+  const timeSecs = totalTimeSpent % 60;
+  const avgTimePerQ = Math.round(totalTimeSpent / questions.length);
 
   return (
-    <main className="min-h-screen bg-[#050b14] text-white p-6 md:p-12 relative overflow-hidden font-sans">
-      {/* Background gradients */}
-      <div className="absolute top-[-10%] right-[-10%] w-[50vw] h-[50vw] rounded-full bg-neon-blue/10 blur-[120px] pointer-events-none" />
-      <div className="absolute bottom-[-10%] left-[-10%] w-[50vw] h-[50vw] rounded-full bg-neon-purple/5 blur-[120px] pointer-events-none" />
+    <main className="min-h-screen bg-[#050b14] text-white p-4 md:p-8 font-sans pb-28">
+      {/* Background decoration */}
+      <div className="absolute top-[-10%] right-[-10%] w-[50vw] h-[50vw] rounded-full bg-neon-blue/5 blur-[120px] pointer-events-none" />
 
-      <div className="max-w-5xl mx-auto relative z-10 space-y-10">
-        {/* Navigation */}
+      <div className="max-w-5xl mx-auto space-y-6 relative z-10">
+        
+        {/* Header Action */}
         <div className="flex items-center justify-between">
-          <Link
-            href="/dashboard"
-            onClick={resetExam}
-            className="flex items-center gap-2 text-xs md:text-sm text-slate-400 hover:text-white transition-all bg-white/5 px-4 py-2 rounded-xl border border-white/10"
-          >
-            <ArrowLeft className="w-4 h-4" /> Back to Dashboard
+          <Link href="/dashboard" className="flex items-center gap-2 text-slate-400 hover:text-white transition-colors">
+            <ArrowLeft className="w-5 h-5" /> กลับสู่ Dashboard
           </Link>
-          <span className="text-[10px] md:text-xs text-neon-blue font-bold tracking-widest uppercase bg-neon-blue/10 px-3 py-1.5 rounded-full border border-neon-blue/20">
-            Exam Performance Result
-          </span>
-        </div>
-
-        {/* Title */}
-        <div className="text-center">
-          <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight bg-gradient-to-r from-white via-slate-200 to-slate-400 bg-clip-text text-transparent">
-            TGAT1 English Exam Analysis
-          </h1>
-          <p className="text-slate-400 mt-2 max-w-lg mx-auto text-sm md:text-base">
-            Detailed breakdown of your English Communication proficiency for Pharmacy TCAS.
-          </p>
-        </div>
-
-        {/* Dashboard Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
-          {/* Circular Score & Grade */}
-          <ScoreChart score={score} total={total} />
-
-          {/* Graph & History Trajectory */}
-          <ProgressGraph history={examHistory} />
-
-          {/* Topic Performance List */}
-          <div className="md:col-span-2">
-            <TopicBreakdown topicScores={topicScores} />
+          <div className="flex items-center gap-3">
+            <Link href="/my-mistakes" className="px-4 py-2 bg-red-500/10 text-red-400 border border-red-500/20 rounded-xl text-sm font-bold hover:bg-red-500/20 transition-all">
+              ดูข้อที่ผิดพลาด
+            </Link>
+            <button onClick={() => router.push('/tgat1')} className="px-4 py-2 bg-neon-blue text-black font-bold rounded-xl text-sm flex items-center gap-2 hover:bg-cyan-400 transition-all">
+              <RefreshCw className="w-4 h-4" /> ทำใหม่อีกครั้ง
+            </button>
           </div>
         </div>
 
-        {/* Actions Bottom Bar */}
-        <div className="flex flex-wrap gap-4 items-center justify-center p-6 bg-white/5 border border-white/10 rounded-3xl backdrop-blur-md">
-          <Link
-            href="/tgat1/study"
-            className="px-6 py-3 rounded-2xl bg-white/10 hover:bg-white/15 text-white font-bold transition-all text-sm flex items-center gap-2"
-          >
-            <Compass className="w-4 h-4 text-neon-blue" /> Practice Weak Areas
-          </Link>
-          <Link
-            href="/my-mistakes"
-            className="px-6 py-3 rounded-2xl bg-neon-blue hover:bg-cyan-400 text-slate-950 font-bold transition-all text-sm flex items-center gap-2 shadow-lg hover:shadow-neon-blue/20"
-          >
-            <BookOpen className="w-4 h-4" /> Review Mistakes Notebook
-          </Link>
-          <Link
-            href="/dashboard"
-            onClick={resetExam}
-            className="px-6 py-3 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/5 text-slate-300 hover:text-white font-bold transition-all text-sm flex items-center gap-2"
-          >
-            <RefreshCw className="w-4 h-4" /> Start New Exam
-          </Link>
+        {/* Top Overview Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="md:col-span-1">
+            <ScoreChart score={score} total={questions.length} label="คะแนน TGAT1" />
+          </div>
+          
+          <div className="md:col-span-2 grid grid-cols-2 gap-4">
+            <div className="bg-slate-900/50 p-6 rounded-3xl border border-white/10 flex flex-col justify-center">
+              <div className="flex items-center gap-2 text-slate-400 mb-2">
+                <Target className="w-5 h-5" /> ระดับความพร้อม
+              </div>
+              <div className={`text-3xl font-black ${percentage >= 60 ? 'text-green-400' : 'text-yellow-400'}`}>
+                {readiness}
+              </div>
+            </div>
+
+            <div className="bg-slate-900/50 p-6 rounded-3xl border border-white/10 flex flex-col justify-center">
+              <div className="flex items-center gap-2 text-slate-400 mb-2">
+                <Clock className="w-5 h-5" /> เวลาที่ใช้ไป
+              </div>
+              <div className="text-3xl font-black text-white">
+                {timeMins}m {timeSecs}s
+              </div>
+              <div className="text-xs text-slate-500 mt-1">
+                เฉลี่ย {avgTimePerQ} วินาที / ข้อ
+              </div>
+            </div>
+            
+            <div className="bg-slate-900/50 p-6 rounded-3xl border border-white/10 flex flex-col justify-center col-span-2">
+              <div className="flex items-center gap-2 text-slate-400 mb-4">
+                <TrendingUp className="w-5 h-5" /> พัฒนาการ (TGAT1)
+              </div>
+              <ProgressGraph history={progress} />
+            </div>
+          </div>
+        </div>
+
+        {/* Detailed Breakdown */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* By Topic */}
+          <div className="bg-slate-900/50 p-6 md:p-8 rounded-3xl border border-white/10 shadow-xl">
+            <h3 className="text-lg font-bold text-white mb-6 flex items-center gap-2">
+              <BarChart2 className="w-5 h-5 text-neon-blue" /> วิเคราะห์จุดอ่อนตามหัวข้อ
+            </h3>
+            <TopicBreakdown topicScores={topicScores} />
+          </div>
+
+          {/* By Difficulty */}
+          <div className="bg-slate-900/50 p-6 md:p-8 rounded-3xl border border-white/10 shadow-xl">
+            <h3 className="text-lg font-bold text-white mb-6 flex items-center gap-2">
+              <BarChart2 className="w-5 h-5 text-purple-400" /> ความแม่นยำตามระดับความยาก
+            </h3>
+            <div className="grid grid-cols-2 gap-4">
+              {diffScores.map(ds => (
+                <div key={ds.difficulty} className="bg-slate-950/50 p-4 rounded-2xl border border-white/5">
+                  <div className="text-sm text-slate-400 font-bold mb-1">{ds.difficulty}</div>
+                  <div className="text-2xl font-black text-white mb-1">{ds.percentage}%</div>
+                  <div className="text-xs text-slate-500">{ds.correct} / {ds.total} ข้อ</div>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
     </main>

@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import type { Question } from "@/types/exam";
 import { useExamStore } from "@/store/examStore";
+import { SafeHtml } from "@/components/SafeHtml";
 
 interface QuestionCardProps {
   question: Question;
@@ -34,12 +35,12 @@ export function QuestionCard({ question, index }: QuestionCardProps) {
 
       {question.passage && (
         <div className="bg-slate-800/40 border border-slate-700/50 rounded-2xl p-6 mb-8 text-slate-300 leading-relaxed font-serif text-lg">
-          {question.passage}
+          <SafeHtml content={question.passage} />
         </div>
       )}
 
       <div className="text-xl md:text-2xl font-medium text-white leading-relaxed mb-8">
-        {question.text}
+        <SafeHtml content={question.text} />
       </div>
 
       <div className="space-y-4">
@@ -75,7 +76,9 @@ export function QuestionCard({ question, index }: QuestionCardProps) {
               }`}>
                 {i + 1}
               </div>
-              <span className="mt-1 text-lg leading-relaxed">{option}</span>
+              <span className="mt-1 text-lg leading-relaxed">
+                <SafeHtml content={option} />
+              </span>
             </motion.button>
           );
         })}

@@ -1,145 +1,141 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
-import type { Question, Difficulty, SearchFilters } from "@/types/exam";
-import { getUniqueMetadata } from "@/lib/search";
+import React, { useState, useEffect } from "react";
+import { Search, Filter, X } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import type { SearchFilters, Difficulty, Frequency } from "@/types/exam";
 
 interface SearchPanelProps {
-  questions: Question[];
-  onFilterChange: (filters: SearchFilters) => void;
-  isTGAT3?: boolean;
+  availableTopics: string[];
+  onSearch: (filters: SearchFilters) => void;
+  resultCount?: number;
 }
 
-export default function SearchPanel({ questions, onFilterChange, isTGAT3 = false }: SearchPanelProps) {
-  const [keyword, setKeyword] = useState("");
-  const [difficulty, setDifficulty] = useState<string>("");
-  const [topic, setTopic] = useState<string>("");
-  const [competency, setCompetency] = useState<string>("");
+export default function SearchPanel({ availableTopics, onSearch, resultCount }: SearchPanelProps) {
+  const [isOpen, setIsOpen] = useState(false);
+  
+  const [filters, setFilters] = useState<SearchFilters>({
+    keyword: "",
+    topic: undefined,
+    difficulty: undefined,
+    frequency: undefined,
+  });
 
-  // Get unique metadata for dropdown lists
-  const metadata = useMemo(() => getUniqueMetadata(questions), [questions]);
+  // Trigger search on filter change
+  useEffect(() => {
+    onSearch(filters);
+  }, [filters, onSearch]);
 
-  const handleKeywordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const val = e.target.value;
-    setKeyword(val);
-    triggerFilter(val, difficulty, topic, competency);
-  };
-
-  const handleDifficultyChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const val = e.target.value;
-    setDifficulty(val);
-    triggerFilter(keyword, val, topic, competency);
-  };
-
-  const handleTopicChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const val = e.target.value;
-    setTopic(val);
-    triggerFilter(keyword, difficulty, val, competency);
-  };
-
-  const handleCompetencyChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const val = e.target.value;
-    setCompetency(val);
-    triggerFilter(keyword, difficulty, topic, val);
-  };
-
-  const triggerFilter = (kw: string, diff: string, top: string, comp: string) => {
-    const filters: SearchFilters = {};
-    if (kw.trim() !== "") filters.keyword = kw;
-    if (diff !== "") filters.difficulty = diff as Difficulty;
-    if (top !== "") filters.topic = top;
-    if (comp !== "") filters.competency = comp;
-    onFilterChange(filters);
-  };
-
-  const handleReset = () => {
-    setKeyword("");
-    setDifficulty("");
-    setTopic("");
-    setCompetency("");
-    onFilterChange({});
+  const handleClear = () => {
+    setFilters({
+      keyword: "",
+      topic: undefined,
+      difficulty: undefined,
+      frequency: undefined,
+    });
   };
 
   return (
-    <div className="p-5 rounded-2xl bg-white/5 backdrop-blur-xl border border-white/10 shadow-2xl mb-6 transition-all duration-300 hover:border-white/20">
-      <div className="flex items-center justify-between mb-4">
-        <h3 className="text-lg font-bold bg-gradient-to-r from-neon-blue to-neon-purple bg-clip-text text-transparent flex items-center gap-2">
-          🔍 Search & Filter Database
-        </h3>
+    <div className="bg-slate-900/50 backdrop-blur-xl border border-white/10 rounded-2xl overflow-hidden shadow-xl">
+      {/* Search Header Bar */}
+      <div className="p-4 flex flex-wrap items-center gap-4 border-b border-white/5">
+        <div className="flex-1 relative">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+          <input
+            type="text"
+            placeholder="ค้นหาข้อสอบจากคีย์เวิร์ด..."
+            value={filters.keyword || ""}
+            onChange={(e) => setFilters(prev => ({ ...prev, keyword: e.target.value }))}
+            className="w-full bg-slate-950/50 border border-white/10 text-white pl-10 pr-4 py-2.5 rounded-xl text-sm focus:outline-none focus:border-neon-blue focus:ring-1 focus:ring-neon-blue transition-all"
+          />
+        </div>
+        
         <button
-          onClick={handleReset}
-          className="text-xs px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-white/80 transition-all font-medium active:scale-95"
+          onClick={() => setIsOpen(!isOpen)}
+          className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold border transition-all ${
+            isOpen || Object.values(filters).some(v => v && v !== "")
+              ? "bg-neon-blue/20 border-neon-blue text-neon-blue"
+              : "bg-white/5 border-white/10 text-slate-300 hover:bg-white/10"
+          }`}
         >
-          Reset Filters
+          <Filter className="w-4 h-4" /> Filters
         </button>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        {/* Keyword Input */}
-        <div className="relative">
-          <input
-            type="text"
-            value={keyword}
-            onChange={handleKeywordChange}
-            placeholder="Type keywords (e.g. insulin, ethics)..."
-            className="w-full px-4 py-2.5 rounded-xl bg-black/30 border border-white/10 text-white placeholder-white/30 text-sm focus:outline-none focus:border-neon-blue/80 focus:ring-1 focus:ring-neon-blue/80 transition-all"
-          />
-        </div>
-
-        {/* Difficulty Select */}
-        <div>
-          <select
-            value={difficulty}
-            onChange={handleDifficultyChange}
-            className="w-full px-4 py-2.5 rounded-xl bg-black/30 border border-white/10 text-white text-sm focus:outline-none focus:border-neon-blue/80 transition-all cursor-pointer"
+      {/* Expanded Filters */}
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            className="border-b border-white/5 bg-slate-900/30"
           >
-            <option value="" className="bg-slate-900 text-white/50">Any Difficulty</option>
-            {metadata.difficulties.map((diff) => (
-              <option key={diff} value={diff} className="bg-slate-900 text-white">
-                {diff}
-              </option>
-            ))}
-          </select>
-        </div>
+            <div className="p-5 grid grid-cols-1 md:grid-cols-3 gap-5">
+              {/* Topic Filter */}
+              <div className="space-y-2">
+                <label className="text-xs font-bold text-slate-400 uppercase tracking-wider">Topic</label>
+                <select
+                  value={filters.topic || ""}
+                  onChange={(e) => setFilters(prev => ({ ...prev, topic: e.target.value || undefined }))}
+                  className="w-full bg-slate-950/80 border border-white/10 text-white p-2.5 rounded-xl text-sm appearance-none focus:outline-none focus:border-neon-blue transition-all"
+                >
+                  <option value="">ทั้งหมด (All Topics)</option>
+                  {availableTopics.map(topic => (
+                    <option key={topic} value={topic}>{topic}</option>
+                  ))}
+                </select>
+              </div>
 
-        {/* Topic Select */}
-        <div>
-          <select
-            value={topic}
-            onChange={handleTopicChange}
-            className="w-full px-4 py-2.5 rounded-xl bg-black/30 border border-white/10 text-white text-sm focus:outline-none focus:border-neon-blue/80 transition-all cursor-pointer"
-          >
-            <option value="" className="bg-slate-900 text-white/50">Any Topic</option>
-            {metadata.topics.map((t) => (
-              <option key={t} value={t} className="bg-slate-900 text-white">
-                {t}
-              </option>
-            ))}
-          </select>
-        </div>
+              {/* Difficulty Filter */}
+              <div className="space-y-2">
+                <label className="text-xs font-bold text-slate-400 uppercase tracking-wider">Difficulty</label>
+                <select
+                  value={filters.difficulty || ""}
+                  onChange={(e) => setFilters(prev => ({ ...prev, difficulty: (e.target.value as Difficulty) || undefined }))}
+                  className="w-full bg-slate-950/80 border border-white/10 text-white p-2.5 rounded-xl text-sm appearance-none focus:outline-none focus:border-neon-blue transition-all"
+                >
+                  <option value="">ทุกระดับความยาก</option>
+                  <option value="Easy">Easy (ง่าย)</option>
+                  <option value="Medium">Medium (ปานกลาง)</option>
+                  <option value="Hard">Hard (ยาก)</option>
+                  <option value="Elite">Elite (โหดหิน)</option>
+                </select>
+              </div>
 
-        {/* Competency (TGAT3-specific) or Fallback */}
-        {isTGAT3 ? (
-          <div>
-            <select
-              value={competency}
-              onChange={handleCompetencyChange}
-              className="w-full px-4 py-2.5 rounded-xl bg-black/30 border border-white/10 text-white text-sm focus:outline-none focus:border-neon-blue/80 transition-all cursor-pointer"
-            >
-              <option value="" className="bg-slate-900 text-white/50">Any Competency</option>
-              {metadata.competencies.map((c) => (
-                <option key={c} value={c} className="bg-slate-900 text-white">
-                  {c}
-                </option>
-              ))}
-            </select>
-          </div>
-        ) : (
-          <div className="flex items-center justify-center text-xs text-white/40 border border-white/5 rounded-xl bg-white/5 select-none">
-            ⚡ Pharmacy Admission Prep
-          </div>
+              {/* Frequency Filter */}
+              <div className="space-y-2">
+                <label className="text-xs font-bold text-slate-400 uppercase tracking-wider">Frequency (สถิติออกสอบ)</label>
+                <select
+                  value={filters.frequency || ""}
+                  onChange={(e) => setFilters(prev => ({ ...prev, frequency: (e.target.value as Frequency) || undefined }))}
+                  className="w-full bg-slate-950/80 border border-white/10 text-white p-2.5 rounded-xl text-sm appearance-none focus:outline-none focus:border-neon-blue transition-all"
+                >
+                  <option value="">ความถี่ทั้งหมด</option>
+                  <option value="Very High">Very High (ออกบ่อยมาก)</option>
+                  <option value="High">High (ออกบ่อย)</option>
+                  <option value="Medium">Medium (ปานกลาง)</option>
+                  <option value="Low">Low (ออกน้อย)</option>
+                </select>
+              </div>
+            </div>
+
+            {/* Clear Filters & Count */}
+            <div className="p-4 flex items-center justify-between border-t border-white/5 bg-slate-950/50">
+              <span className="text-xs text-slate-400 font-bold bg-white/5 px-3 py-1 rounded-full border border-white/10">
+                พบข้อสอบ {resultCount ?? 0} ข้อ
+              </span>
+              
+              <button
+                onClick={handleClear}
+                className="flex items-center gap-1.5 text-xs text-slate-400 hover:text-red-400 font-bold transition-colors"
+              >
+                <X className="w-3.5 h-3.5" /> ล้างฟิลเตอร์ทั้งหมด
+              </button>
+            </div>
+          </motion.div>
         )}
-      </div>
+      </AnimatePresence>
     </div>
   );
 }

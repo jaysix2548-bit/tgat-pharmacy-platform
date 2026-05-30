@@ -8,6 +8,7 @@ import { ArrowLeft, ArrowRight, Flag, CheckCircle2, Bookmark, Lightbulb, Zap, He
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import QuestionNavigator from "@/components/exam/QuestionNavigator";
+import { SafeHtml } from "@/components/SafeHtml";
 
 export default function TGAT2ExamPage() {
   const router = useRouter();
@@ -150,12 +151,12 @@ export default function TGAT2ExamPage() {
 
           {q.passage && (
             <div className="bg-slate-950/60 border border-white/5 rounded-2xl p-5 mb-6 text-slate-300 leading-relaxed font-serif text-base">
-              {q.passage}
+              <SafeHtml content={q.passage} />
             </div>
           )}
 
           <h3 className="text-lg md:text-xl font-bold text-white leading-relaxed mb-6">
-            {q.text}
+            <SafeHtml content={q.text} />
           </h3>
 
           <div className="space-y-3.5">
@@ -178,7 +179,9 @@ export default function TGAT2ExamPage() {
                   }`}>
                     {i + 1}
                   </div>
-                  <span className="text-sm md:text-base leading-relaxed mt-0.5">{opt}</span>
+                  <span className="text-sm md:text-base leading-relaxed mt-0.5">
+                    <SafeHtml content={opt} />
+                  </span>
                 </button>
               );
             })}
@@ -206,22 +209,30 @@ export default function TGAT2ExamPage() {
 
             <div className="bg-slate-900/60 rounded-xl p-4 border border-white/5">
               <h5 className="font-bold text-neon-blue mb-1">เฉลยและคำอธิบาย</h5>
-              <p className="text-slate-300 leading-relaxed">{q.correctExplanation}</p>
+              <p className="text-slate-300 leading-relaxed">
+                <SafeHtml content={q.correctExplanation} />
+              </p>
             </div>
             {selectedAnswer !== q.answer && (
               <div className="bg-red-500/5 rounded-xl p-4 border border-red-500/10">
                 <h5 className="font-bold text-red-400 mb-1">วิเคราะห์ตัวเลือกที่คุณเลือก</h5>
-                <p className="text-slate-300 leading-relaxed">{q.wrongExplanation}</p>
+                <p className="text-slate-300 leading-relaxed">
+                  <SafeHtml content={q.wrongExplanation} />
+                </p>
               </div>
             )}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="bg-purple-500/5 rounded-xl p-4 border border-purple-500/10">
                 <h5 className="font-bold text-purple-400 mb-1">แนวคิด (Mindset)</h5>
-                <p className="text-slate-300 leading-relaxed">{q.mindset}</p>
+                <p className="text-slate-300 leading-relaxed">
+                  <SafeHtml content={q.mindset} />
+                </p>
               </div>
               <div className="bg-yellow-500/5 rounded-xl p-4 border border-yellow-500/10">
                 <h5 className="font-bold text-yellow-400 mb-1">เทคนิคทำเร็ว (Speed Hack)</h5>
-                <p className="text-slate-300 leading-relaxed">{q.speedHack}</p>
+                <p className="text-slate-300 leading-relaxed">
+                  <SafeHtml content={q.speedHack} />
+                </p>
               </div>
             </div>
           </motion.div>

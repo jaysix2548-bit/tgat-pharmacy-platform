@@ -1,20 +1,22 @@
-import type { Metadata } from 'next';
-import './globals.css';
-import Navbar from '@/components/layout/Navbar';
+import type { Metadata } from "next";
+import "./globals.css";
+import Navbar from "@/components/layout/Navbar";
 
 export const metadata: Metadata = {
-  title: 'TGAT Pharmacy TCAS 2570 Simulator',
-  description: 'Premium Pharmacy Admission EdTech Simulator Platform',
+  title: "TGAT Pharmacy Platform",
+  description: "Premium TGAT Simulator for Thai Students",
 };
 
 export default function RootLayout({
   children,
-}: {
+}: Readonly<{
   children: React.ReactNode;
-}) {
+}>) {
   return (
-    <html lang="th">
-      <body className="bg-[#050b14] text-slate-100 min-h-screen selection:bg-neon-blue/30 selection:text-white antialiased">
+    <html lang="en">
+      <body
+        className="antialiased bg-[#050b14] pt-16"
+      >
         <Navbar />
         {children}
       </body>

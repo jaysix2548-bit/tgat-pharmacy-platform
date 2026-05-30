@@ -8,6 +8,7 @@ import { ArrowLeft, ArrowRight, Flag, CheckCircle2, Bookmark, Lightbulb, Zap, He
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import QuestionNavigator from "@/components/exam/QuestionNavigator";
+import { SafeHtml } from "@/components/SafeHtml";
 
 export default function TGAT1ExamPage() {
   const router = useRouter();
@@ -40,7 +41,7 @@ export default function TGAT1ExamPage() {
     setMounted(true);
   }, [setQuestions, examMode]);
 
-  // Timer Countdown Effect (only runs in exam mode)
+  // Timer Countdown Effect
   useEffect(() => {
     if (!mounted || isFinished || examMode !== "exam") return;
 
@@ -70,7 +71,6 @@ export default function TGAT1ExamPage() {
   const isQuestionBookmarked = isBookmarked(q.id);
   const selectedAnswer = answers[currentQuestionIndex];
 
-  // Timing helper
   const formatTime = (secs: number) => {
     const m = Math.floor(secs / 60);
     const s = secs % 60;
@@ -85,7 +85,7 @@ export default function TGAT1ExamPage() {
   return (
     <main className="min-h-screen bg-[#050b14] text-white p-4 md:p-8 relative overflow-hidden font-sans pb-28">
       {/* Background decoration */}
-      <div className="absolute top-[-10%] right-[-10%] w-[50vw] h-[50vw] rounded-full bg-neon-blue/5 blur-[120px] pointer-events-none" />
+      <div className="absolute top-[-10%] right-[-10%] w-[50vw] h-[50vw] rounded-full bg-neon-purple/5 blur-[120px] pointer-events-none" />
 
       <div className="max-w-4xl mx-auto space-y-6 relative z-10">
         {/* Top Header Panel */}
@@ -151,12 +151,12 @@ export default function TGAT1ExamPage() {
 
           {q.passage && (
             <div className="bg-slate-950/60 border border-white/5 rounded-2xl p-5 mb-6 text-slate-300 leading-relaxed font-serif text-base">
-              {q.passage}
+              <SafeHtml content={q.passage} />
             </div>
           )}
 
           <h3 className="text-lg md:text-xl font-bold text-white leading-relaxed mb-6">
-            {q.text}
+            <SafeHtml content={q.text} />
           </h3>
 
           <div className="space-y-3.5">
@@ -179,14 +179,16 @@ export default function TGAT1ExamPage() {
                   }`}>
                     {i + 1}
                   </div>
-                  <span className="text-sm md:text-base leading-relaxed mt-0.5">{opt}</span>
+                  <span className="text-sm md:text-base leading-relaxed mt-0.5">
+                    <SafeHtml content={opt} />
+                  </span>
                 </button>
               );
             })}
           </div>
         </div>
 
-        {/* Immediate Explanation Panel for Practice Mode */}
+        {/* Immediate Explanation Panel */}
         {examMode === "practice" && selectedAnswer !== undefined && (
           <motion.div
             initial={{ opacity: 0, y: 15 }}
@@ -207,22 +209,30 @@ export default function TGAT1ExamPage() {
 
             <div className="bg-slate-900/60 rounded-xl p-4 border border-white/5">
               <h5 className="font-bold text-neon-blue mb-1">เฉลยและคำอธิบาย</h5>
-              <p className="text-slate-300 leading-relaxed">{q.correctExplanation}</p>
+              <p className="text-slate-300 leading-relaxed">
+                <SafeHtml content={q.correctExplanation} />
+              </p>
             </div>
             {selectedAnswer !== q.answer && (
               <div className="bg-red-500/5 rounded-xl p-4 border border-red-500/10">
                 <h5 className="font-bold text-red-400 mb-1">วิเคราะห์ตัวเลือกที่คุณเลือก</h5>
-                <p className="text-slate-300 leading-relaxed">{q.wrongExplanation}</p>
+                <p className="text-slate-300 leading-relaxed">
+                  <SafeHtml content={q.wrongExplanation} />
+                </p>
               </div>
             )}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="bg-purple-500/5 rounded-xl p-4 border border-purple-500/10">
                 <h5 className="font-bold text-purple-400 mb-1">แนวคิด (Mindset)</h5>
-                <p className="text-slate-300 leading-relaxed">{q.mindset}</p>
+                <p className="text-slate-300 leading-relaxed">
+                  <SafeHtml content={q.mindset} />
+                </p>
               </div>
               <div className="bg-yellow-500/5 rounded-xl p-4 border border-yellow-500/10">
                 <h5 className="font-bold text-yellow-400 mb-1">เทคนิคทำเร็ว (Speed Hack)</h5>
-                <p className="text-slate-300 leading-relaxed">{q.speedHack}</p>
+                <p className="text-slate-300 leading-relaxed">
+                  <SafeHtml content={q.speedHack} />
+                </p>
               </div>
             </div>
           </motion.div>
@@ -233,7 +243,6 @@ export default function TGAT1ExamPage() {
       <div className="fixed bottom-0 left-0 w-full bg-slate-950/90 backdrop-blur-xl border-t border-white/10 p-4 z-40">
         <div className="max-w-4xl mx-auto flex items-center justify-between gap-4">
           <div className="flex gap-2">
-            {/* Flag Trigger */}
             <button
               onClick={() => toggleFlag(currentQuestionIndex)}
               className={`p-2.5 rounded-xl border transition-all ${
@@ -241,12 +250,11 @@ export default function TGAT1ExamPage() {
                   ? "bg-red-500/20 border-red-500 text-red-400"
                   : "bg-white/5 border-white/5 text-slate-400 hover:bg-white/10"
               }`}
-              title="Flag this difficult question to review later"
+              title="Flag question"
             >
               <Flag className="w-5 h-5" />
             </button>
 
-            {/* Bookmark Trigger */}
             <button
               onClick={() => toggleBookmark(q.id)}
               className={`p-2.5 rounded-xl border transition-all ${
@@ -254,7 +262,7 @@ export default function TGAT1ExamPage() {
                   ? "bg-yellow-500/20 border-yellow-500 text-yellow-400"
                   : "bg-white/5 border-white/5 text-slate-400 hover:bg-white/10"
               }`}
-              title="Bookmark question to study long-term"
+              title="Bookmark question"
             >
               <Bookmark className="w-5 h-5" />
             </button>

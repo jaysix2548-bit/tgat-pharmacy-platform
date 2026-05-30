@@ -27,14 +27,21 @@ export const useExamStore = create<ExamState>()(
 
       // --- Actions: Exam lifecycle ---
       setQuestions: (examId, questions, mode = 'practice') => {
+        // Shuffle questions
+        const shuffledQuestions = [...questions];
+        for (let i = shuffledQuestions.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [shuffledQuestions[i], shuffledQuestions[j]] = [shuffledQuestions[j], shuffledQuestions[i]];
+        }
+
         set({
           examId,
           examMode: mode,
-          questions,
+          questions: shuffledQuestions,
           currentQuestionIndex: 0,
           answers: {},
           flags: {},
-          timeRemaining: examId === 'tgat1' ? 3600 : examId === 'tgat2' ? 4500 : 3600, // standard tgat timings: 60m, 75m, 60m
+          timeRemaining: examId === 'tgat1' ? 3600 : examId === 'tgat2' ? 4500 : 3600,
           isFinished: false,
           score: 0,
           questionStartTime: Date.now(),

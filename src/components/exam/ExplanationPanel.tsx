@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { CheckCircle2, XCircle, Lightbulb, Zap } from "lucide-react";
 import type { Question } from "@/types/exam";
 import { useExamStore } from "@/store/examStore";
+import { SafeHtml } from "@/components/SafeHtml";
 
 interface ExplanationPanelProps {
   question: Question;
@@ -33,7 +34,9 @@ export function ExplanationPanel({ question, index }: ExplanationPanelProps) {
           <h4 className="text-cyan-400 font-bold mb-2 flex items-center gap-2">
             <CheckCircle2 className="w-4 h-4" /> เฉลยและคำอธิบาย
           </h4>
-          <p className="text-slate-300 leading-relaxed">{question.correctExplanation}</p>
+          <p className="text-slate-300 leading-relaxed">
+            <SafeHtml content={question.correctExplanation} />
+          </p>
         </div>
 
         {!isCorrect && selectedAnswer !== undefined && (
@@ -41,7 +44,9 @@ export function ExplanationPanel({ question, index }: ExplanationPanelProps) {
             <h4 className="text-red-400 font-bold mb-2 flex items-center gap-2">
               <XCircle className="w-4 h-4" /> ทำไมถึงผิด?
             </h4>
-            <p className="text-slate-300 leading-relaxed">{question.wrongExplanation}</p>
+            <p className="text-slate-300 leading-relaxed">
+              <SafeHtml content={question.wrongExplanation} />
+            </p>
           </div>
         )}
 
@@ -50,14 +55,18 @@ export function ExplanationPanel({ question, index }: ExplanationPanelProps) {
             <h4 className="text-purple-400 font-bold mb-2 flex items-center gap-2">
               <Lightbulb className="w-4 h-4" /> แนวคิด (Mindset)
             </h4>
-            <p className="text-slate-300 text-sm leading-relaxed">{question.mindset}</p>
+            <p className="text-slate-300 text-sm leading-relaxed">
+              <SafeHtml content={question.mindset} />
+            </p>
           </div>
 
           <div className="bg-yellow-500/10 rounded-2xl p-5 border border-yellow-500/20">
             <h4 className="text-yellow-400 font-bold mb-2 flex items-center gap-2">
               <Zap className="w-4 h-4" /> เทคนิคทำเร็ว (Speed Hack)
             </h4>
-            <p className="text-slate-300 text-sm leading-relaxed">{question.speedHack}</p>
+            <p className="text-slate-300 text-sm leading-relaxed">
+              <SafeHtml content={question.speedHack} />
+            </p>
           </div>
         </div>
       </div>
