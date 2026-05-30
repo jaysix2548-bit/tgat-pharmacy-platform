@@ -30,23 +30,45 @@
 
             <div class="rules-card">
                 <ul>
-                    <li><strong>สัดส่วนข้อสอบ:</strong> 80 ข้อ แบ่งเป็น 5 ส่วน (16 ข้อ/ส่วน) ได้แก่ Numerical
+                    <li><strong>สัดส่วนข้อสอบ:</strong> 80 ข้อ แบ่งเป็น 5 ส่วน ได้แก่ Numerical
                         Reasoning, Logical Reasoning, Spatial Reasoning, Analytical Thinking, IQ/Speed Thinking</li>
-                    <li><strong>จำกัดเวลา:</strong> 60 นาที (เฉลี่ย 45 วินาทีต่อข้อ — ต้องคิดเร็วและตัดสินใจไว)</li>
-                    <li><strong>เป้าหมายผู้เข้าสอบเภสัช:</strong> ควรตั้งเป้า 64/80 ข้อ (80%) ขึ้นไป</li>
-                    <li><strong>เทคนิคพิเศษ:</strong> ข้อที่ไม่แน่ใจ ให้ข้ามก่อนแล้วกลับมาทำทีหลัง อย่าเสียเวลามากกว่า
-                        90 วินาทีต่อข้อ</li>
+                    <li><strong>จำกัดเวลา:</strong> 60 นาที (เฉลี่ย 45 วินาทีต่อข้อ)</li>
+                    <li><strong>เป้าหมาย:</strong> ตั้งเป้า 64/80 ข้อ (80%) ขึ้นไป</li>
                 </ul>
             </div>
 
-            <div style="display: flex; gap: 20px; flex-wrap: wrap; justify-content: center; margin-top: 15px;">
+            <!-- New Settings Panel -->
+            <div style="background: rgba(15, 23, 42, 0.7); border: 1px solid rgba(148, 163, 184, 0.2); border-radius: 12px; padding: 20px; margin-top: 20px; max-width: 600px; margin-left: auto; margin-right: auto; text-align: left;">
+                <h3 style="color: var(--neon-blue); margin-bottom: 15px; font-size: 1.1rem;">⚙️ Settings & Configuration</h3>
+                
+                <div style="display: flex; gap: 20px; flex-wrap: wrap; margin-bottom: 15px;">
+                    <div style="flex: 1; min-width: 200px;">
+                        <label style="display: block; color: var(--text-muted); font-size: 0.9rem; margin-bottom: 8px;">Exam Mode:</label>
+                        <select id="exam-mode-select" style="width: 100%; padding: 10px; border-radius: 8px; background: #1e293b; color: white; border: 1px solid rgba(148,163,184,0.3);">
+                            <option value="practice">Practice Mode (เห็นเฉลยทันที)</option>
+                            <option value="exam">Exam Mode (จับเวลา, เฉลยตอนจบ)</option>
+                        </select>
+                    </div>
+                    <div style="flex: 1; min-width: 200px;">
+                        <label style="display: block; color: var(--text-muted); font-size: 0.9rem; margin-bottom: 8px;">Difficulty:</label>
+                        <select id="difficulty-select" style="width: 100%; padding: 10px; border-radius: 8px; background: #1e293b; color: white; border: 1px solid rgba(148,163,184,0.3);">
+                            <option value="all">All Levels (80 ข้อ)</option>
+                            <option value="warmup">Warm Up (Easy + Medium)</option>
+                            <option value="elite">Elite Mode (Hard + Elite)</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div style="display: flex; gap: 20px; flex-wrap: wrap; justify-content: center; margin-top: 25px;">
                 <a href="tgat2-study.html" class="btn-neon"
                     style="background: linear-gradient(135deg, var(--warning), var(--neon-purple)); box-shadow: 0 0 20px rgba(245, 158, 11, 0.4); text-decoration: none;">📖
                     อ่านสรุปเนื้อหาก่อนสอบ</a>
                 <button class="btn-neon" onclick="startExam()">⚡ เริ่มทำข้อสอบทันที</button>
+                <button class="btn-action" onclick="startAdaptiveReview()" style="background: var(--neon-blue); color: #000; border: none; font-weight: bold;">🎯 Practice Weak Areas</button>
             </div>
-            <div style="margin-top: 10px;">
-                <a href="/" class="btn-action" style="text-decoration: none;">← กลับหน้า Hub</a>
+            <div style="margin-top: 15px;">
+                <a href="/" class="btn-action" style="text-decoration: none; border-color: transparent;">← กลับหน้า Hub</a>
             </div>
         </div>
 
@@ -94,11 +116,12 @@
                         <!-- Loaded dynamically -->
                     </div>
 
-                    <div class="feedback-actions">
-                        <button class="btn-action" id="submit-ans-btn" onclick="submitAnswer()" disabled>Confirm
-                            Answer</button>
-                        <button class="btn-action" id="next-btn" onclick="nextQuestion()" style="display: none;">Next
-                            Question</button>
+                    <div class="feedback-actions" style="display: flex; gap: 15px; align-items: center; width: 100%;">
+                        <button class="btn-action" id="submit-ans-btn" onclick="submitAnswer()" disabled>Confirm Answer</button>
+                        <button class="btn-action" id="next-btn" onclick="nextQuestion()" style="display: none;">Next Question</button>
+                        <button class="btn-action" id="flag-btn" onclick="toggleFlag()" style="margin-left: auto; background: transparent; border: 1px solid var(--warning); color: var(--warning);">
+                            🚩 Flag for Review
+                        </button>
                     </div>
 
                     <!-- Hidden until answer submitted -->

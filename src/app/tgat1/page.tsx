@@ -1,108 +1,289 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { ArrowLeft, ArrowRight, Flag, CheckCircle } from "lucide-react";
 import { useExamStore } from "@/store/examStore";
-import { Timer } from "@/components/exam/Timer";
-import { QuestionCard } from "@/components/exam/QuestionCard";
-import { ExplanationPanel } from "@/components/exam/ExplanationPanel";
-import tgat1Data from "@/data/tgat1.json";
-import type { Question } from "@/types/exam";
+import { TGAT1_QUESTIONS } from "@/data/tgat1";
+import { ArrowLeft, ArrowRight, Flag, CheckCircle2, Bookmark, Lightbulb, Zap, HelpCircle } from "lucide-react";
+import Link from "next/link";
+import { motion, AnimatePresence } from "framer-motion";
+import QuestionNavigator from "@/components/exam/QuestionNavigator";
 
-export default function Tgat1Exam() {
+export default function TGAT1ExamPage() {
   const router = useRouter();
   const [mounted, setMounted] = useState(false);
-  const { 
-    questions, currentQuestionIndex, isFinished, 
-    setQuestions, nextQuestion, prevQuestion, toggleBookmark, bookmarks, finishExam, score 
+  const [showNavigator, setShowNavigator] = useState(false);
+
+  const {
+    examMode,
+    questions,
+    currentQuestionIndex,
+    answers,
+    flags,
+    timeRemaining,
+    isFinished,
+    score,
+    setQuestions,
+    setAnswer,
+    nextQuestion,
+    prevQuestion,
+    toggleFlag,
+    toggleBookmark,
+    isBookmarked,
+    finishExam,
+    setTimeRemaining,
   } = useExamStore();
 
+  // Load questions
   useEffect(() => {
-    // Load exam data
-    setQuestions(tgat1Data as Question[]);
+    setQuestions("tgat1", TGAT1_QUESTIONS, examMode);
     setMounted(true);
-  }, [setQuestions]);
+  }, [setQuestions, examMode]);
 
-  if (!mounted || questions.length === 0) return <div className="min-h-screen bg-slate-950 flex justify-center items-center text-cyan-400">Loading Exam Engine...</div>;
+  // Timer Countdown Effect (only runs in exam mode)
+  useEffect(() => {
+    if (!mounted || isFinished || examMode !== "exam") return;
 
-  const currentQuestion = questions[currentQuestionIndex];
-  const isBookmarked = bookmarks[currentQuestionIndex];
+    const timer = setInterval(() => {
+      if (timeRemaining <= 0) {
+        finishExam();
+        router.push("/results/tgat1");
+      } else {
+        setTimeRemaining(timeRemaining - 1);
+      }
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [mounted, timeRemaining, isFinished, examMode, finishExam, setTimeRemaining, router]);
+
+  if (!mounted || questions.length === 0) {
+    return (
+      <div className="min-h-screen bg-[#050b14] flex items-center justify-center text-neon-blue font-bold font-mono">
+        Loading Exam Engine...
+      </div>
+    );
+  }
+
+  const q = questions[currentQuestionIndex];
+  const total = questions.length;
+  const isQuestionFlagged = flags[currentQuestionIndex] === true;
+  const isQuestionBookmarked = isBookmarked(q.id);
+  const selectedAnswer = answers[currentQuestionIndex];
+
+  // Timing helper
+  const formatTime = (secs: number) => {
+    const m = Math.floor(secs / 60);
+    const s = secs % 60;
+    return `${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
+  };
+
+  const handleFinish = () => {
+    finishExam();
+    router.push("/results/tgat1");
+  };
 
   return (
-    <main className="min-h-screen bg-slate-950 text-slate-100 p-4 md:p-8">
-      {/* Top Navigation & Status Bar */}
-      <div className="max-w-6xl mx-auto flex flex-wrap items-center justify-between gap-4 mb-8 bg-slate-900/80 backdrop-blur-md border border-slate-800 p-4 rounded-2xl sticky top-4 z-50 shadow-2xl">
-        <div className="flex items-center gap-4">
-          <button 
-            onClick={() => router.push("/")}
-            className="p-2 hover:bg-slate-800 rounded-lg text-slate-400 hover:text-white transition-colors"
-          >
-            <ArrowLeft className="w-5 h-5" />
-          </button>
-          <div className="font-bold text-lg text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400">
-            TGAT1 : English Communication
+    <main className="min-h-screen bg-[#050b14] text-white p-4 md:p-8 relative overflow-hidden font-sans pb-28">
+      {/* Background decoration */}
+      <div className="absolute top-[-10%] right-[-10%] w-[50vw] h-[50vw] rounded-full bg-neon-blue/5 blur-[120px] pointer-events-none" />
+
+      <div className="max-w-4xl mx-auto space-y-6 relative z-10">
+        {/* Top Header Panel */}
+        <div className="flex items-center justify-between p-4 bg-slate-900/60 backdrop-blur-xl border border-white/10 rounded-2xl shadow-xl">
+          <div className="flex items-center gap-3">
+            <Link
+              href="/dashboard"
+              className="p-2 hover:bg-white/5 rounded-xl text-slate-400 hover:text-white transition-colors border border-white/5"
+            >
+              <ArrowLeft className="w-5 h-5" />
+            </Link>
+            <div>
+              <h2 className="text-sm font-extrabold text-white leading-tight">
+                TGAT1: English Communication
+              </h2>
+              <span className="text-[9px] uppercase tracking-wider font-bold text-neon-blue bg-neon-blue/10 px-2 py-0.5 rounded border border-neon-blue/20">
+                {examMode === "exam" ? "Real Exam Sim" : "Practice Mode"}
+              </span>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-4">
+            {examMode === "exam" ? (
+              <div className="px-4 py-2 bg-red-500/10 border border-red-500/20 text-red-400 rounded-xl font-mono font-bold text-sm">
+                ⏳ {formatTime(timeRemaining)}
+              </div>
+            ) : (
+              <span className="text-xs text-slate-400 font-bold bg-white/5 px-3 py-1.5 rounded-xl border border-white/5 uppercase">
+                ⚡ Self-Paced
+              </span>
+            )}
+            <button
+              onClick={() => setShowNavigator(!showNavigator)}
+              className="text-xs px-3.5 py-2 bg-white/5 hover:bg-white/10 text-white font-bold rounded-xl border border-white/5 transition-all"
+            >
+              Grid Navigator
+            </button>
           </div>
         </div>
-        
-        <Timer />
-      </div>
 
-      {/* Main Exam Content */}
-      <div className="max-w-6xl mx-auto mb-24">
-        {isFinished && (
-          <div className="mb-8 p-8 bg-slate-900 border border-slate-800 rounded-3xl text-center shadow-xl">
-            <h2 className="text-3xl font-black mb-4">ผลการทำสอบ</h2>
-            <div className="text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500 mb-4">
-              {score} / {questions.length}
-            </div>
-            <p className="text-slate-400">คุณสามารถดูเฉลยอย่างละเอียดได้ในแต่ละข้อด้านล่างนี้</p>
+        {/* Navigator Drawer */}
+        <AnimatePresence>
+          {showNavigator && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              className="overflow-hidden"
+            >
+              <QuestionNavigator onSelectQuestion={() => setShowNavigator(false)} />
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Question Panel */}
+        <div className="p-6 md:p-8 rounded-3xl bg-slate-900/40 backdrop-blur-xl border border-white/10 shadow-2xl relative">
+          <div className="flex items-center justify-between mb-6 pb-4 border-b border-white/5">
+            <span className="text-xs font-bold text-neon-blue bg-neon-blue/10 border border-neon-blue/20 px-3 py-1 rounded-lg">
+              ข้อ {currentQuestionIndex + 1} จาก {total}
+            </span>
+            <span className="text-xs text-slate-400 font-medium">Difficulty: {q.difficulty}</span>
           </div>
-        )}
 
-        <QuestionCard question={currentQuestion} index={currentQuestionIndex} />
-        
-        {isFinished && <ExplanationPanel question={currentQuestion} index={currentQuestionIndex} />}
+          {q.passage && (
+            <div className="bg-slate-950/60 border border-white/5 rounded-2xl p-5 mb-6 text-slate-300 leading-relaxed font-serif text-base">
+              {q.passage}
+            </div>
+          )}
+
+          <h3 className="text-lg md:text-xl font-bold text-white leading-relaxed mb-6">
+            {q.text}
+          </h3>
+
+          <div className="space-y-3.5">
+            {q.options.map((opt, i) => {
+              const isSelected = selectedAnswer === i;
+              
+              let style = "bg-white/5 border-white/10 text-slate-300 hover:bg-white/10 hover:border-slate-500";
+              if (isSelected) {
+                style = "bg-neon-blue/20 border-neon-blue text-white shadow-[0_0_15px_rgba(6,182,212,0.2)]";
+              }
+
+              return (
+                <button
+                  key={i}
+                  onClick={() => setAnswer(currentQuestionIndex, i)}
+                  className={`w-full text-left p-4 rounded-xl border transition-all duration-200 flex items-start gap-4 ${style}`}
+                >
+                  <div className={`flex-shrink-0 w-6 h-6 flex items-center justify-center rounded-full font-bold text-xs border ${
+                    isSelected ? "border-neon-blue text-neon-blue" : "border-slate-500 text-slate-400"
+                  }`}>
+                    {i + 1}
+                  </div>
+                  <span className="text-sm md:text-base leading-relaxed mt-0.5">{opt}</span>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Immediate Explanation Panel for Practice Mode */}
+        {examMode === "practice" && selectedAnswer !== undefined && (
+          <motion.div
+            initial={{ opacity: 0, y: 15 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="p-6 md:p-8 rounded-3xl bg-slate-950/80 border border-white/10 shadow-xl space-y-5 text-sm"
+          >
+            <div className="flex items-center gap-2 border-b border-white/5 pb-3">
+              {selectedAnswer === q.answer ? (
+                <span className="text-green-400 font-extrabold flex items-center gap-1 bg-green-500/10 px-3 py-1 rounded-xl border border-green-500/20 text-xs">
+                  ✓ ตอบถูกต้อง!
+                </span>
+              ) : (
+                <span className="text-red-400 font-extrabold flex items-center gap-1 bg-red-500/10 px-3 py-1 rounded-xl border border-red-500/20 text-xs">
+                  ✗ ยังไม่ถูกต้อง
+                </span>
+              )}
+            </div>
+
+            <div className="bg-slate-900/60 rounded-xl p-4 border border-white/5">
+              <h5 className="font-bold text-neon-blue mb-1">เฉลยและคำอธิบาย</h5>
+              <p className="text-slate-300 leading-relaxed">{q.correctExplanation}</p>
+            </div>
+            {selectedAnswer !== q.answer && (
+              <div className="bg-red-500/5 rounded-xl p-4 border border-red-500/10">
+                <h5 className="font-bold text-red-400 mb-1">วิเคราะห์ตัวเลือกที่คุณเลือก</h5>
+                <p className="text-slate-300 leading-relaxed">{q.wrongExplanation}</p>
+              </div>
+            )}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="bg-purple-500/5 rounded-xl p-4 border border-purple-500/10">
+                <h5 className="font-bold text-purple-400 mb-1">แนวคิด (Mindset)</h5>
+                <p className="text-slate-300 leading-relaxed">{q.mindset}</p>
+              </div>
+              <div className="bg-yellow-500/5 rounded-xl p-4 border border-yellow-500/10">
+                <h5 className="font-bold text-yellow-400 mb-1">เทคนิคทำเร็ว (Speed Hack)</h5>
+                <p className="text-slate-300 leading-relaxed">{q.speedHack}</p>
+              </div>
+            </div>
+          </motion.div>
+        )}
       </div>
 
-      {/* Bottom Control Bar */}
-      <div className="fixed bottom-0 left-0 w-full bg-slate-900/95 backdrop-blur-xl border-t border-slate-800 p-4 z-50">
-        <div className="max-w-6xl mx-auto flex items-center justify-between gap-4">
-          <button
-            onClick={() => toggleBookmark(currentQuestionIndex)}
-            className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-medium transition-colors ${
-              isBookmarked ? "bg-yellow-500/20 text-yellow-400 border border-yellow-500/30" : "bg-slate-800 text-slate-400 hover:bg-slate-700 border border-transparent"
-            }`}
-          >
-            <Flag className={`w-5 h-5 ${isBookmarked ? "fill-current" : ""}`} />
-            <span className="hidden sm:inline">{isBookmarked ? "ทำสัญลักษณ์ไว้แล้ว" : "ทำสัญลักษณ์ไว้กลับมาดู"}</span>
-          </button>
+      {/* Bottom Sticky Action Bar */}
+      <div className="fixed bottom-0 left-0 w-full bg-slate-950/90 backdrop-blur-xl border-t border-white/10 p-4 z-40">
+        <div className="max-w-4xl mx-auto flex items-center justify-between gap-4">
+          <div className="flex gap-2">
+            {/* Flag Trigger */}
+            <button
+              onClick={() => toggleFlag(currentQuestionIndex)}
+              className={`p-2.5 rounded-xl border transition-all ${
+                isQuestionFlagged
+                  ? "bg-red-500/20 border-red-500 text-red-400"
+                  : "bg-white/5 border-white/5 text-slate-400 hover:bg-white/10"
+              }`}
+              title="Flag this difficult question to review later"
+            >
+              <Flag className="w-5 h-5" />
+            </button>
+
+            {/* Bookmark Trigger */}
+            <button
+              onClick={() => toggleBookmark(q.id)}
+              className={`p-2.5 rounded-xl border transition-all ${
+                isQuestionBookmarked
+                  ? "bg-yellow-500/20 border-yellow-500 text-yellow-400"
+                  : "bg-white/5 border-white/5 text-slate-400 hover:bg-white/10"
+              }`}
+              title="Bookmark question to study long-term"
+            >
+              <Bookmark className="w-5 h-5" />
+            </button>
+          </div>
 
           <div className="flex items-center gap-3">
             <button
               onClick={prevQuestion}
               disabled={currentQuestionIndex === 0}
-              className="p-2.5 bg-slate-800 text-slate-300 rounded-xl hover:bg-slate-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              className="p-2.5 bg-white/5 border border-white/5 text-slate-300 rounded-xl hover:bg-white/10 disabled:opacity-30 transition-all"
             >
               <ArrowLeft className="w-5 h-5" />
             </button>
-            
-            <span className="font-mono text-slate-400 px-2">
-              {currentQuestionIndex + 1} / {questions.length}
+
+            <span className="font-mono text-sm text-slate-400 font-bold px-1 select-none">
+              {currentQuestionIndex + 1} / {total}
             </span>
 
-            {currentQuestionIndex === questions.length - 1 ? (
+            {currentQuestionIndex === total - 1 ? (
               <button
-                onClick={finishExam}
-                disabled={isFinished}
-                className="flex items-center gap-2 px-6 py-2.5 bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-400 hover:to-emerald-400 text-white rounded-xl font-bold disabled:opacity-50 disabled:cursor-not-allowed shadow-lg transition-all"
+                onClick={handleFinish}
+                className="px-6 py-2.5 bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-400 hover:to-emerald-400 text-white rounded-xl font-bold flex items-center gap-1.5 shadow-lg shadow-green-500/20 active:scale-95 transition-all text-sm"
               >
-                <CheckCircle className="w-5 h-5" /> ส่งข้อสอบ
+                <CheckCircle2 className="w-5 h-5" /> Submit Exam
               </button>
             ) : (
               <button
                 onClick={nextQuestion}
-                className="p-2.5 bg-slate-800 text-slate-300 rounded-xl hover:bg-slate-700 transition-colors"
+                className="p-2.5 bg-white/5 border border-white/5 text-slate-300 rounded-xl hover:bg-white/10 transition-all"
               >
                 <ArrowRight className="w-5 h-5" />
               </button>
