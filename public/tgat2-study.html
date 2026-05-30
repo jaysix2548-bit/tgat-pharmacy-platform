@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TGAT2 Premium Study — Pharmacy TCAS Simulator</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container" id="app-container">
+        <div id="study-screen" style="display: flex; flex-direction: column; gap: 25px; width: 100%; animation: fadeIn 0.5s ease-out;">
+            <div class="study-header">
+                <h1 class="purple-text" style="font-size: 2.2rem; font-weight: 800;">TGAT2 Logic & Critical Prep</h1>
+                <p style="color: var(--text-muted); margin-top: 8px;">เจาะลึกวิธีคิดเชิงตรรกะและสถิติการแพทย์ขั้นสูง (Premium TCAS Edition)</p>
+            </div>
+
+            <div class="study-grid">
+                <div class="study-sidebar">
+                    <button class="study-tab-btn active" id="tab-btn-0" onclick="switchStudyTab(0)">
+                        <span>🔢 Part 1: Numerical</span>
+                        <span class="badge-read" id="badge-read-0">อ่านแล้ว</span>
+                    </button>
+                    <button class="study-tab-btn" id="tab-btn-1" onclick="switchStudyTab(1)">
+                        <span>🧠 Part 2: Logical</span>
+                        <span class="badge-read" id="badge-read-1">อ่านแล้ว</span>
+                    </button>
+                    <button class="study-tab-btn" id="tab-btn-2" onclick="switchStudyTab(2)">
+                        <span>🧊 Part 3: Spatial</span>
+                        <span class="badge-read" id="badge-read-2">อ่านแล้ว</span>
+                    </button>
+                    <button class="study-tab-btn" id="tab-btn-3" onclick="switchStudyTab(3)">
+                        <span>📊 Part 4: Analytical</span>
+                        <span class="badge-read" id="badge-read-3">อ่านแล้ว</span>
+                    </button>
+                    <button class="study-tab-btn" id="tab-btn-4" onclick="switchStudyTab(4)">
+                        <span>⚡ Part 5: Speed</span>
+                        <span class="badge-read" id="badge-read-4">อ่านแล้ว</span>
+                    </button>
+                    <a href="/" class="btn-action" style="margin-top: auto; text-align: center; text-decoration: none;">← กลับหน้า Hub</a>
+                </div>
+
+                <div class="study-main">
+                    <!-- Tab 1: Numerical -->
+                    <div class="study-panel" id="study-panel-0">
+                        <div class="action-bar"><button class="btn-bookmark" onclick="toggleBookmark(this, 'tgat2-p1')">⭐ Save This Topic</button></div>
+                        <h3 class="purple-text">🔢 Part 1: Numerical Reasoning</h3>
+                        
+                        <div class="concept-card">
+                            <div class="concept-title">
+                                <span class="diff-tag diff-comp">🔴 Competitive</span>
+                                <span>🧪 1. หลักการเจือจางยา (Dilution Concept C₁V₁ = C₂V₂)</span>
+                            </div>
+                            <p style="margin: 0; line-height: 1.6; color: var(--text-main);">
+                                ข้อสอบแนวการผสมสารละลาย หรือคำนวณ % ความเข้มข้น มักออกในข้อสอบบ่อยครั้ง ห้ามเทียบบัญญัติไตรยางศ์มั่วๆ ให้ใช้สมการมวลสาร (Mass Balance) เสมอ
+                            </p>
+                            
+                            <div class="accordion" onclick="this.classList.toggle('active')">
+                                <div class="accordion-header"><span>▼ ดูตัวอย่าง: การเตรียมแอลกอฮอล์</span></div>
+                                <div class="accordion-content">
+                                    <p><b>โจทย์:</b> มีแอลกอฮอล์ 95% ต้องการเตรียมแอลกอฮอล์ 70% จำนวน 1,000 ml ต้องใช้แอลกอฮอล์ 95% กี่ ml?</p>
+                                    <p><b>วิธีทำ (C₁V₁ = C₂V₂):</b><br>
+                                    C₁ = 95, V₁ = ? (สิ่งที่ต้องการหา)<br>
+                                    C₂ = 70, V₂ = 1,000<br>
+                                    95 * V₁ = 70 * 1,000<br>
+                                    V₁ = 70,000 / 95 = <b class="purple-text">736.84 ml</b> (และเติมน้ำจนครบ 1,000 ml)</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="trap-card">
+                            <div class="trap-title">🚨 Common Trap: Consecutive Discounts</div>
+                            <p style="margin: 0; line-height: 1.6;">
+                                การลดราคา 20% แล้วลดอีก 10% <b>ไม่เท่ากับ</b> ลด 30%!<br>
+                                สมมติยาประเมินราคา 100 บาท -> ลด 20% เหลือ 80 บาท -> ลดอีก 10% ของ 80 บาท (คือ 8 บาท) -> <b>เหลือ 72 บาท</b> (ลดไป 28% ไม่ใช่ 30%)
+                            </p>
+                        </div>
+
+                        <div class="mini-quiz">
+                            <div class="mini-quiz-title">⚡ Quick Check</div>
+                            <div class="mini-question">Q: If you mix 100 ml of 10% saline with 100 ml of 20% saline, what is the final concentration?</div>
+                            <div class="mini-options">
+                                <div class="mini-option" onclick="this.classList.add('wrong')">A. 30%</div>
+                                <div class="mini-option" onclick="this.classList.add('correct')">B. 15%</div>
+                                <div class="mini-option" onclick="this.classList.add('wrong')">C. 10%</div>
+                            </div>
+                        </div>
+                        <div class="checklist-container"><div class="checklist-item" id="checklist-btn-0" onclick="toggleChecklist(0)"><span>[ ] ติ๊กเมื่อทำความเข้าใจหัวข้อนี้แล้ว</span></div></div>
+                    </div>
+
+                    <!-- Tab 2: Logical -->
+                    <div class="study-panel" id="study-panel-1" style="display: none;">
+                        <div class="action-bar"><button class="btn-bookmark" onclick="toggleBookmark(this, 'tgat2-p2')">⭐ Save This Topic</button></div>
+                        <h3 class="purple-text">🧠 Part 2: Logical Reasoning</h3>
+                        
+                        <div class="concept-card">
+                            <div class="concept-title">
+                                <span class="diff-tag diff-elite">⚫ Elite</span>
+                                <span>⚖️ 1. กฎการอนุมาน (Deductive Rules: Modus Ponens / Tollens)</span>
+                            </div>
+                            <p style="margin: 0; line-height: 1.6; color: var(--text-main);">
+                                ข้อสอบตรรกศาสตร์ขั้นสูง ห้ามใช้ความรู้สึก ให้แปลงเป็นสัญลักษณ์ (P → Q) เสมอ
+                            </p>
+                            <div class="accordion" onclick="this.classList.toggle('active')">
+                                <div class="accordion-header"><span>▼ ดูตัวอย่าง: การวินิจฉัยโรค (Modus Tollens)</span></div>
+                                <div class="accordion-content">
+                                    <p><b>กฎ Modus Tollens:</b> ถ้า P → Q และเรามี ~Q (ไม่ใช่ Q) สรุปได้ว่า ~P (ไม่ใช่ P)</p>
+                                    <p><b>สถานการณ์:</b> "ถ้าคนไข้เป็นไข้เลือดออก (P) คนไข้จะมีเกล็ดเลือดต่ำ (Q)"<br>
+                                    <b>ข้อเท็จจริง:</b> "ตรวจแล้ว เกล็ดเลือดของคนไข้ปกติ (~Q)"<br>
+                                    <b>บทสรุปที่ถูกต้อง:</b> "คนไข้ไม่ได้เป็นไข้เลือดออก (~P)"</p>
+                                    <div class="examiner-box">
+                                        <div class="examiner-box-title">🎯 How Examiners Think:</div>
+                                        <p style="margin:0; font-size: 0.95rem;">ข้อสอบชอบหลอกด้วยกฎวิบัติ (Fallacy of Affirming the Consequent) เช่น "เกล็ดเลือดต่ำ (Q) สรุปว่าเป็นไข้เลือดออก (P)" ซึ่ง <b>ผิด</b> เพราะเกล็ดเลือดต่ำอาจเกิดจากโรคอื่นได้!</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="pharmacy-box">
+                            <div class="pharmacy-box-title">💊 Pharmacy Insight:</div>
+                            <p style="margin:0; font-size: 0.95rem;">ตรรกะแบบ Modus Tollens ใช้บ่อยในการ Rule-out (ตัดโรค/ตัดยาที่แพ้ออกไป) เพื่อหา Diagnosis หรือ Treatment ที่ปลอดภัยที่สุด</p>
+                        </div>
+
+                        <div class="mini-quiz">
+                            <div class="mini-quiz-title">⚡ Quick Check</div>
+                            <div class="mini-question">Q: Premise 1: ถ้ากินยาสเตียรอยด์ (P) จะทำให้หน้าบวม (Q). Premise 2: ป้าสมหมายหน้าไม่บวม (~Q). สรุปได้ว่าอะไร?</div>
+                            <div class="mini-options">
+                                <div class="mini-option" onclick="this.classList.add('correct')">A. ป้าสมหมายไม่ได้กินยาสเตียรอยด์</div>
+                                <div class="mini-option" onclick="this.classList.add('wrong')">B. ป้าสมหมายกินยาสเตียรอยด์</div>
+                                <div class="mini-option" onclick="this.classList.add('wrong')">C. สรุปไม่ได้</div>
+                            </div>
+                        </div>
+                        <div class="checklist-container"><div class="checklist-item" id="checklist-btn-1" onclick="toggleChecklist(1)"><span>[ ] ติ๊กเมื่อทำความเข้าใจหัวข้อนี้แล้ว</span></div></div>
+                    </div>
+
+                    <!-- Tab 3: Spatial -->
+                    <div class="study-panel" id="study-panel-2" style="display: none;">
+                        <div class="action-bar"><button class="btn-bookmark" onclick="toggleBookmark(this, 'tgat2-p3')">⭐ Save This Topic</button></div>
+                        <h3 class="purple-text">🧊 Part 3: Spatial Reasoning</h3>
+                        
+                        <div class="concept-card">
+                            <div class="concept-title">
+                                <span class="diff-tag diff-inter">🟡 Intermediate</span>
+                                <span>📦 1. การคลี่กล่องลูกบาศก์ (Cube Unfolding)</span>
+                            </div>
+                            <p style="margin: 0; line-height: 1.6; color: var(--text-main);">
+                                หัวใจสำคัญของการพับกล่องคือ <b>หน้าตรงข้าม (Opposite Faces) จะไม่มีวันอยู่ติดกัน (Adjacent)</b> ในลูกบาศก์ที่พับเสร็จแล้ว
+                            </p>
+                        </div>
+
+                        <div class="strategy-box">
+                            <div class="strategy-box-title">⏱️ Time Strategy: "The 3-Face Rule"</div>
+                            <p style="margin:0; font-size: 0.95rem;">เวลาพับลูกบาศก์ ให้มองทีละ 3 หน้าที่ใช้มุมร่วมกัน (Vertex) ถ้ารูปในโจทย์มีหน้าใดหน้าหนึ่งสลับทิศทางไปจากกระดาษคลี่ ถือว่าผิดทันที ไม่ต้องดูต่อ ตัดช้อยส์ได้ภายใน 15 วินาที</p>
+                        </div>
+
+                        <div class="mini-quiz">
+                            <div class="mini-quiz-title">⚡ Quick Check</div>
+                            <div class="mini-question">Q: เมื่อคลี่ลูกบาศก์ หน้าที่อยู่ติดกัน (Adjacent) ในตอนแรก จะมีโอกาสอยู่ตรงข้ามกันได้หรือไม่?</div>
+                            <div class="mini-options">
+                                <div class="mini-option" onclick="this.classList.add('correct')">A. ไม่ได้เด็ดขาด</div>
+                                <div class="mini-option" onclick="this.classList.add('wrong')">B. ได้ ขึ้นอยู่กับมุมมอง</div>
+                            </div>
+                        </div>
+                        <div class="checklist-container"><div class="checklist-item" id="checklist-btn-2" onclick="toggleChecklist(2)"><span>[ ] ติ๊กเมื่อทำความเข้าใจหัวข้อนี้แล้ว</span></div></div>
+                    </div>
+
+                    <!-- Tab 4: Analytical -->
+                    <div class="study-panel" id="study-panel-3" style="display: none;">
+                        <div class="action-bar"><button class="btn-bookmark" onclick="toggleBookmark(this, 'tgat2-p4')">⭐ Save This Topic</button></div>
+                        <h3 class="purple-text">📊 Part 4: Analytical Thinking</h3>
+                        
+                        <div class="concept-card">
+                            <div class="concept-title">
+                                <span class="diff-tag diff-elite">⚫ Elite</span>
+                                <span>📈 1. Simpson's Paradox (เมื่อสถิติหลอกตา)</span>
+                            </div>
+                            <p style="margin: 0; line-height: 1.6; color: var(--text-main);">
+                                <span class="tooltip-term" data-tooltip="ความขัดแย้งของซิมป์สัน">Simpson's Paradox</span> คือปรากฏการณ์ที่แนวโน้มของข้อมูลดูเป็นแบบหนึ่งเมื่อดูภาพรวม แต่กลับกลายเป็นตรงกันข้ามเมื่อแยกดูตามกลุ่มย่อย (Subgroups) เป็นสิ่งที่นักวิจัย/เภสัชกรต้องระวังที่สุดเวลาอ่านงานวิจัย!
+                            </p>
+                            
+                            <div class="accordion" onclick="this.classList.toggle('active')">
+                                <div class="accordion-header"><span>▼ ดูตัวอย่าง: การทดลองยาใหม่ (Drug Trial)</span></div>
+                                <div class="accordion-content">
+                                    <p><b>ภาพรวม:</b> ยา A รักษาหาย 60% ส่วน ยา B รักษาหาย 70% (ดูเหมือน B ดีกว่า)</p>
+                                    <p><b>เมื่อแยกตามกลุ่มย่อย:</b><br>
+                                    - กลุ่มอาการเบา: ยา A หาย 90%, ยา B หาย 80% (A ดีกว่า!)<br>
+                                    - กลุ่มอาการหนัก: ยา A หาย 40%, ยา B หาย 30% (A ดีกว่า!)<br>
+                                    </p>
+                                    <p><b>ทำไมภาพรวม B ถึงชนะ?</b> เพราะยา B ส่วนใหญ่ถูกจ่ายให้ "กลุ่มอาการเบา" (ที่รักษาง่ายอยู่แล้ว) ส่วนยา A ไปรักษา "กลุ่มอาการหนัก" ทำให้ภาพรวมยา A ดูแย่ <b>นี่คือ Confounding Variable (ตัวแปรสอดแทรก)</b></p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mini-quiz">
+                            <div class="mini-quiz-title">⚡ Quick Check</div>
+                            <div class="mini-question">Q: What is the main lesson from Simpson's Paradox?</div>
+                            <div class="mini-options">
+                                <div class="mini-option" onclick="this.classList.add('wrong')">A. Statistics never lie.</div>
+                                <div class="mini-option" onclick="this.classList.add('correct')">B. Overall data can be misleading if hidden variables (subgroups) are ignored.</div>
+                                <div class="mini-option" onclick="this.classList.add('wrong')">C. Smaller sample sizes are better.</div>
+                            </div>
+                        </div>
+
+                        <div class="resource-box">
+                            <strong>📚 Recommended Resources:</strong><br>
+                            <a href="https://www.youtube.com/watch?v=ebEhj59IdqU" target="_blank" class="resource-link">🎥 TED-Ed: How statistics can be misleading</a>
+                        </div>
+                        <div class="checklist-container"><div class="checklist-item" id="checklist-btn-3" onclick="toggleChecklist(3)"><span>[ ] ติ๊กเมื่อทำความเข้าใจหัวข้อนี้แล้ว</span></div></div>
+                    </div>
+
+                    <!-- Tab 5: Speed -->
+                    <div class="study-panel" id="study-panel-4" style="display: none;">
+                        <div class="action-bar"><button class="btn-bookmark" onclick="toggleBookmark(this, 'tgat2-p5')">⭐ Save This Topic</button></div>
+                        <h3 class="purple-text">⚡ Part 5: IQ / Speed Thinking</h3>
+                        
+                        <div class="concept-card">
+                            <div class="concept-title">
+                                <span class="diff-tag diff-basic">🟢 Basic</span>
+                                <span>⏱️ 1. กฎ BODMAS (ลำดับการคำนวณคณิตศาสตร์)</span>
+                            </div>
+                            <p style="margin: 0; line-height: 1.6; color: var(--text-main);">
+                                B = Brackets (วงเล็บ), O = Orders (ยกกำลัง), D = Division, M = Multiplication (คูณหารทำจากซ้ายไปขวา), A = Addition, S = Subtraction (บวกลบทำจากซ้ายไปขวา)
+                            </p>
+                        </div>
+                        
+                        <div class="trap-card">
+                            <div class="trap-title">🚨 Common Trap: 6 ÷ 2(1+2) = ?</div>
+                            <p style="margin: 0; line-height: 1.6;">
+                                คนมักตอบ 1 เพราะเอา 2 ไปคูณวงเล็บก่อน แต่ผิด!<br>
+                                ตาม BODMAS: ทำวงเล็บก่อน (1+2)=3. จากนั้นสมการคือ 6 ÷ 2 * 3. คูณและหารศักดิ์เท่ากัน ให้ทำจากซ้ายไปขวา: 6 ÷ 2 = 3. จากนั้น 3 * 3 = <b>9</b>.
+                            </p>
+                        </div>
+
+                        <div class="checklist-container"><div class="checklist-item" id="checklist-btn-4" onclick="toggleChecklist(4)"><span>[ ] ติ๊กเมื่อทำความเข้าใจหัวข้อนี้แล้ว</span></div></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tracker -->
+            <div class="prep-tracker">
+                <div class="prep-progress-container">
+                    <div style="display: flex; justify-content: space-between; font-size: 0.95rem; font-weight: 600;">
+                        <span class="purple-text">🛡️ ระดับความพร้อม</span>
+                        <span class="success-text" id="prep-percent-text">0%</span>
+                    </div>
+                    <div class="prep-progress-bar-bg">
+                        <div class="prep-progress-bar-fill" id="prep-progress-fill"></div>
+                    </div>
+                </div>
+                <a href="tgat2.html" class="btn-neon" id="ready-exam-btn" style="min-width: 250px; text-align: center;">🎯 เริ่มทำข้อสอบจริง</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const storageKey = 'checklist_state_tgat2';
+        const totalTabs = 5;
+        let checklistState = Array(totalTabs).fill(false);
+
+        // Load stored state if available
+        try {
+            const stored = localStorage.getItem(storageKey);
+            if (stored) {
+                checklistState = JSON.parse(stored);
+            }
+        } catch(e) {
+            console.error('Failed to parse checklist state', e);
+        }
+
+        function switchStudyTab(idx) {
+            for (let i = 0; i < totalTabs; i++) {
+                document.getElementById('study-panel-' + i).style.display = i === idx ? 'block' : 'none';
+                document.getElementById('tab-btn-' + i).classList.toggle('active', i === idx);
+            }
+        }
+
+        function toggleChecklist(idx) {
+            checklistState[idx] = !checklistState[idx];
+            
+            // Save state
+            try {
+                localStorage.setItem(storageKey, JSON.stringify(checklistState));
+            } catch(e) {
+                console.error('Failed to save checklist state', e);
+            }
+            
+            updateChecklistUI(idx);
+            updateStudyProgress();
+        }
+
+        function updateChecklistUI(idx) {
+            const btn = document.getElementById('checklist-btn-' + idx);
+            const tabBtn = document.getElementById('tab-btn-' + idx);
+            if (!btn || !tabBtn) return;
+            
+            if (checklistState[idx]) {
+                btn.classList.add('checked');
+                btn.querySelector('span').textContent = '[✔] เข้าใจแล้ว!';
+                tabBtn.classList.add('read-done');
+            } else {
+                btn.classList.remove('checked');
+                btn.querySelector('span').textContent = '[ ] ติ๊กเมื่อทำความเข้าใจหัวข้อนี้แล้ว';
+                tabBtn.classList.remove('read-done');
+            }
+        }
+
+        function updateStudyProgress() {
+            const completed = checklistState.filter(Boolean).length;
+            const percent = Math.round((completed / totalTabs) * 100);
+            document.getElementById('prep-percent-text').textContent = percent + '%';
+            document.getElementById('prep-progress-fill').style.width = percent + '%';
+        }
+
+        function toggleBookmark(btn, topicId) {
+            btn.classList.toggle('saved');
+            if (btn.classList.contains('saved')) {
+                btn.innerHTML = '🌟 Saved in Bookmarks';
+                localStorage.setItem('bookmark_' + topicId, 'true');
+            } else {
+                btn.innerHTML = '⭐ Save This Topic';
+                localStorage.removeItem('bookmark_' + topicId);
+            }
+        }
+        
+        
+
+        window.onload = () => {
+            const tabs = ['tgat2-p1', 'tgat2-p2', 'tgat2-p3', 'tgat2-p4', 'tgat2-p5'];
+            const btns = document.querySelectorAll('.btn-bookmark');
+            tabs.forEach((tab, index) => {
+                if (localStorage.getItem('bookmark_' + tab) && btns[index]) {
+                    btns[index].classList.add('saved');
+                    btns[index].innerHTML = '🌟 Saved in Bookmarks';
+                }
+            });
+            
+            // Load checklist UI states on page load
+            for (let i = 0; i < totalTabs; i++) {
+                updateChecklistUI(i);
+            }
+            updateStudyProgress();
+        }
+        </script>
+</body>
+</html>

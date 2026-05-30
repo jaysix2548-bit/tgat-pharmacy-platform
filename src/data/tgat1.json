@@ -1,0 +1,20 @@
+[
+  {
+    "section": "English Communication",
+    "partTitle": "Part 1: Conversation",
+    "suggestedTime": "1 Min",
+    "text": "At a restaurant...\nWaiter: Are you ready to order?\nCustomer: _________",
+    "passage": null,
+    "options": [
+      "Yes, I'd like the steak, please.",
+      "No, I am full.",
+      "I want to go home.",
+      "Where is the restroom?"
+    ],
+    "answer": 0,
+    "correctExplanation": "เป็นคำตอบรับที่เหมาะสมที่สุดเมื่อพนักงานเสิร์ฟถามว่าจะสั่งอาหารหรือยัง",
+    "wrongExplanation": "ตัวเลือกอื่นไม่ตรงกับบริบทการสั่งอาหาร",
+    "mindset": "ต้องวิเคราะห์สถานการณ์ (At a restaurant) และบทบาทสมมติ (Customer/Waiter)",
+    "speedHack": "เห็นคำว่า 'order' มองหาคำตอบที่มีชื่ออาหารหรือการตอบรับการสั่งอาหาร"
+  }
+]

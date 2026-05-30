@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TGAT3 Premium Study — Pharmacy TCAS Simulator</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container" id="app-container">
+        <div id="study-screen" style="display: flex; flex-direction: column; gap: 25px; width: 100%; animation: fadeIn 0.5s ease-out;">
+            <div class="study-header">
+                <h1 class="success-text" style="font-size: 2.2rem; font-weight: 800; color: var(--success);">TGAT3 Future Workforce</h1>
+                <p style="color: var(--text-muted); margin-top: 8px;">สมรรถนะการทำงานในอนาคต สำหรับบุคลากรทางการแพทย์ (Premium TCAS Edition)</p>
+            </div>
+
+            <div class="study-grid">
+                <div class="study-sidebar">
+                    <button class="study-tab-btn active" id="tab-btn-0" onclick="switchStudyTab(0)">
+                        <span>🎯 Part 1: Problem Solving</span>
+                        <span class="badge-read" id="badge-read-0">อ่านแล้ว</span>
+                    </button>
+                    <button class="study-tab-btn" id="tab-btn-1" onclick="switchStudyTab(1)">
+                        <span>🤝 Part 2: Teamwork</span>
+                        <span class="badge-read" id="badge-read-1">อ่านแล้ว</span>
+                    </button>
+                    <button class="study-tab-btn" id="tab-btn-2" onclick="switchStudyTab(2)">
+                        <span>⚖️ Part 3: Ethics (PDPA)</span>
+                        <span class="badge-read" id="badge-read-2">อ่านแล้ว</span>
+                    </button>
+                    <button class="study-tab-btn" id="tab-btn-3" onclick="switchStudyTab(3)">
+                        <span>💡 Part 4: Creativity</span>
+                        <span class="badge-read" id="badge-read-3">อ่านแล้ว</span>
+                    </button>
+                    <a href="/" class="btn-action" style="margin-top: auto; text-align: center; text-decoration: none;">← กลับหน้า Hub</a>
+                </div>
+
+                <div class="study-main">
+                    <!-- Tab 1: Problem Solving -->
+                    <div class="study-panel" id="study-panel-0">
+                        <div class="action-bar"><button class="btn-bookmark" onclick="toggleBookmark(this, 'tgat3-p1')">⭐ Save This Topic</button></div>
+                        <h3 class="success-text" style="color: var(--success);">🎯 Part 1: Complex Problem Solving</h3>
+                        
+                        <div class="concept-card">
+                            <div class="concept-title">
+                                <span class="diff-tag diff-comp">🔴 Competitive</span>
+                                <span>🚨 1. การจัดการข้อผิดพลาด (Medication Error Case Study)</span>
+                            </div>
+                            <p style="margin: 0; line-height: 1.6; color: var(--text-main);">
+                                หัวใจของการแก้ปัญหาในวิชาชีพสาธารณสุขคือ <b>"ความปลอดภัยของผู้ป่วยมาก่อนเสมอ (Patient Safety First)"</b> ห้ามปกปิดความผิด ห้ามโทษกันเอง และต้องแก้ปัญหาที่ระบบ (System-based approach)
+                            </p>
+                            
+                            <div class="accordion" onclick="this.classList.toggle('active')">
+                                <div class="accordion-header"><span>▼ Case Study: จ่ายยาผิดคน!</span></div>
+                                <div class="accordion-content">
+                                    <p><b>เหตุการณ์:</b> คุณเพิ่งรู้ตัวว่าจ่ายยาผิดซองให้คนไข้ที่เพิ่งเดินออกจากร้านไปเมื่อ 5 นาทีที่แล้ว</p>
+                                    <p><b>สิ่งที่ห้ามทำเด็ดขาด (❌):</b> ปล่อยผ่านไปแล้วหวังว่าคนไข้จะไม่อ่านฉลาก หรือ โทษผู้ช่วยเภสัชกรที่หยิบยามาให้</p>
+                                    <p><b>สิ่งที่ต้องทำ (✅):</b><br>
+                                    1. รีบติดต่อคนไข้ทันที (โทรศัพท์หรือตามไป) เพื่อระงับการใช้ยา<br>
+                                    2. ประเมินอาการหากคนไข้กินยาไปแล้ว<br>
+                                    3. รายงานอุบัติการณ์ (Incident Report) เพื่อหาสาเหตุระดับองค์กร (Root Cause Analysis)</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="strategy-box" style="border-left-color: var(--success);">
+                            <div class="strategy-box-title" style="color: var(--success);">🎯 How Examiners Think:</div>
+                            <p style="margin:0; font-size: 0.95rem;">ช้อยส์ที่เป็นคำตอบที่ถูกต้องที่สุดมักจะมีคำว่า "ทบทวนระบบการทำงาน" หรือ "ร่วมมือกันหาทางแก้ไขเพื่อไม่ให้เกิดซ้ำ" ข้อสอบไม่ต้องการ Hero ที่ลุยเดี่ยว แต่ต้องการ Team Player ที่เน้นระบบ</p>
+                        </div>
+
+                        <div class="mini-quiz">
+                            <div class="mini-quiz-title">⚡ Quick Check</div>
+                            <div class="mini-question">Q: เมื่อพบว่ามีข้อผิดพลาดทางการแพทย์เกิดขึ้น สิ่งแรกที่ควรพิจารณาคืออะไร?</div>
+                            <div class="mini-options">
+                                <div class="mini-option" onclick="this.classList.add('wrong')">A. หาว่าใครเป็นคนทำผิดเพื่อลงโทษ</div>
+                                <div class="mini-option" onclick="this.classList.add('correct')">B. ความปลอดภัยและการช่วยเหลือผู้ป่วยทันที</div>
+                                <div class="mini-option" onclick="this.classList.add('wrong')">C. การปิดข่าวเพื่อรักษาชื่อเสียงของโรงพยาบาล</div>
+                            </div>
+                        </div>
+                        <div class="checklist-container"><div class="checklist-item" id="checklist-btn-0" onclick="toggleChecklist(0)"><span>[ ] ติ๊กเมื่อทำความเข้าใจหัวข้อนี้แล้ว</span></div></div>
+                    </div>
+
+                    <!-- Tab 2: Teamwork -->
+                    <div class="study-panel" id="study-panel-1" style="display: none;">
+                        <div class="action-bar"><button class="btn-bookmark" onclick="toggleBookmark(this, 'tgat3-p2')">⭐ Save This Topic</button></div>
+                        <h3 class="success-text" style="color: var(--success);">🤝 Part 2: Teamwork & De-escalation</h3>
+                        
+                        <div class="concept-card">
+                            <div class="concept-title">
+                                <span class="diff-tag diff-elite">⚫ Elite</span>
+                                <span>🗣️ 1. เทคนิคการลดความขัดแย้ง (De-escalation Techniques)</span>
+                            </div>
+                            <p style="margin: 0; line-height: 1.6; color: var(--text-main);">
+                                เวลาเผชิญหน้ากับคนไข้อารมณ์ร้อน หรือเพื่อนร่วมงานที่กำลังโกรธ ห้ามใช้ประโยคที่ขึ้นต้นด้วย "คุณต้อง..." (You-statement) ให้ใช้ประโยคที่ขึ้นต้นด้วย "ผม/ดิฉันรู้สึก..." (I-statement) และใช้ <b>Active Listening</b>
+                            </p>
+                            
+                            <!-- Interactive Case Simulation -->
+                            <div style="background: rgba(15,23,42,0.8); border: 1px dashed var(--neon-blue); border-radius: 8px; padding: 20px; margin-top: 15px;">
+                                <h4 style="color: var(--neon-blue); margin-top: 0;">🎮 Interactive Case Simulation</h4>
+                                <p><b>สถานการณ์:</b> คนไข้ตะโกนด่าทอคุณในร้านขายยาเพราะรอคิวนานมาก คุณจะพูดประโยคไหนเป็นประโยคแรก?</p>
+                                
+                                <div class="mini-options" style="margin-top: 15px;">
+                                    <div class="mini-option" onclick="showSimulationFeedback('A')">A. "กรุณาใจเย็นๆ ก่อนนะคะ คิวอื่นก็รอเหมือนกันค่ะ"</div>
+                                    <div class="mini-option" onclick="showSimulationFeedback('B')">B. "ขอโทษที่ทำให้รอนานนะคะ ดิฉันเข้าใจเลยว่าคุณรีบ เดี๋ยวจะรีบจัดการให้ค่ะ"</div>
+                                    <div class="mini-option" onclick="showSimulationFeedback('C')">C. (เงียบ ไม่โต้ตอบ แล้วก้มหน้าจัดยาต่อไป)</div>
+                                </div>
+
+                                <div id="simulation-feedback" style="margin-top: 15px; padding: 15px; border-radius: 6px; display: none; line-height: 1.5;"></div>
+                            </div>
+                        </div>
+
+                        <div class="pharmacy-box">
+                            <div class="pharmacy-box-title">💊 Pharmacy Insight:</div>
+                            <p style="margin:0; font-size: 0.95rem;">บอกให้คนไข้ "ใจเย็นๆ (Calm down)" เป็นคำต้องห้ามในจิตวิทยาคลินิก เพราะมันคือการปฏิเสธอารมณ์ของเขา (Invalidate feelings) ซึ่งจะทำให้เขาโกรธหนักกว่าเดิม!</p>
+                        </div>
+
+                        <div class="checklist-container"><div class="checklist-item" id="checklist-btn-1" onclick="toggleChecklist(1)"><span>[ ] ติ๊กเมื่อทำความเข้าใจหัวข้อนี้แล้ว</span></div></div>
+                    </div>
+
+                    <!-- Tab 3: Ethics -->
+                    <div class="study-panel" id="study-panel-2" style="display: none;">
+                        <div class="action-bar"><button class="btn-bookmark" onclick="toggleBookmark(this, 'tgat3-p3')">⭐ Save This Topic</button></div>
+                        <h3 class="success-text" style="color: var(--success);">⚖️ Part 3: Ethics & PDPA</h3>
+                        
+                        <div class="concept-card">
+                            <div class="concept-title">
+                                <span class="diff-tag diff-comp">🔴 Competitive</span>
+                                <span>🔒 1. กฎหมาย PDPA และจรรยาบรรณวิชาชีพ</span>
+                            </div>
+                            <p style="margin: 0; line-height: 1.6; color: var(--text-main);">
+                                ข้อมูลสุขภาพจัดเป็น <span class="tooltip-term" data-tooltip="ข้อมูลอ่อนไหวที่กฎหมายคุ้มครองสูงสุด">Sensitive Data</span> ห้ามเปิดเผยข้อมูลคนไข้ต่อบุคคลที่ 3 (รวมถึงญาติที่ไม่ได้ระบุชื่อ) หากไม่ได้รับความยินยอม ยกเว้นกรณีที่เป็นไปตามกฎหมาย (เช่น โรคติดต่อร้ายแรง)
+                            </p>
+                        </div>
+                        
+                        <div class="trap-card">
+                            <div class="trap-title">🚨 Common Trap: Conflict of Interest (ผลประโยชน์ทับซ้อน)</div>
+                            <p style="margin: 0; line-height: 1.6;">
+                                หากเซลล์ขายยาเสนอเปอร์เซ็นต์หรือของขวัญราคาแพงให้เภสัชกรแลกกับการสั่งยาของบริษัทนั้น <b>คำตอบเดียวที่ถูกต้องคือ ปฏิเสธอย่างเด็ดขาด</b> ไม่ว่าข้ออ้างนั้นจะดูมีเมตตาแค่ไหน (เช่น "เอาเงินไปสมทบทุนโรงพยาบาล" ก็ผิดจรรยาบรรณ!)
+                            </p>
+                        </div>
+
+                        <div class="mini-quiz">
+                            <div class="mini-quiz-title">⚡ Quick Check</div>
+                            <div class="mini-question">Q: เพื่อนสนิทของคนไข้โทรมาถามว่าคนไข้เป็นโรคอะไร คุณควรทำอย่างไร?</div>
+                            <div class="mini-options">
+                                <div class="mini-option" onclick="this.classList.add('wrong')">A. บอกไปเลยเพราะเป็นเพื่อนสนิทกัน</div>
+                                <div class="mini-option" onclick="this.classList.add('wrong')">B. บอกแค่อาการคร่าวๆ ไม่บอกชื่อโรค</div>
+                                <div class="mini-option" onclick="this.classList.add('correct')">C. ปฏิเสธการให้ข้อมูลอย่างสุภาพ เพราะต้องรักษาความลับผู้ป่วย</div>
+                            </div>
+                        </div>
+                        <div class="checklist-container"><div class="checklist-item" id="checklist-btn-2" onclick="toggleChecklist(2)"><span>[ ] ติ๊กเมื่อทำความเข้าใจหัวข้อนี้แล้ว</span></div></div>
+                    </div>
+
+                    <!-- Tab 4: Creativity -->
+                    <div class="study-panel" id="study-panel-3" style="display: none;">
+                        <div class="action-bar"><button class="btn-bookmark" onclick="toggleBookmark(this, 'tgat3-p4')">⭐ Save This Topic</button></div>
+                        <h3 class="success-text" style="color: var(--success);">💡 Part 4: Value Creation & Creativity</h3>
+                        
+                        <div class="concept-card">
+                            <div class="concept-title">
+                                <span class="diff-tag diff-inter">🟡 Intermediate</span>
+                                <span>🚀 1. นวัตกรรมที่ยั่งยืน (Frugal Innovation)</span>
+                            </div>
+                            <p style="margin: 0; line-height: 1.6; color: var(--text-main);">
+                                ข้อสอบ TGAT ยุคใหม่ไม่ได้มองหาความอลังการ (เช่น สร้าง AI ร้อยล้าน) แต่มองหา <b>Frugal Innovation</b> (นวัตกรรมแบบประหยัด) คือการแก้ปัญหาใหญ่ด้วยทรัพยากรที่มีจำกัด เหมาะกับบริบทสาธารณสุขไทย
+                            </p>
+                            
+                            <div class="accordion" onclick="this.classList.toggle('active')">
+                                <div class="accordion-header"><span>▼ ดูตัวอย่าง: กล่องยาอัจฉริยะแบบบ้านๆ</span></div>
+                                <div class="accordion-content">
+                                    <p>แทนที่จะสร้างแอปพลิเคชันแจ้งเตือนกินยาที่คนแก่ใช้ไม่เป็น เภสัชกรชาวบ้านแก้ปัญหาโดยการ <b>นำตลับยามาติดกับปฏิทินแบบฉีก</b> และวาดรูปพระอาทิตย์/พระจันทร์ ทำให้ผู้สูงอายุทานยาถูกเวลา 100% นี่คือความคิดสร้างสรรค์ที่ได้คะแนนสูงสุดใน TGAT3!</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="checklist-container"><div class="checklist-item" id="checklist-btn-3" onclick="toggleChecklist(3)"><span>[ ] ติ๊กเมื่อทำความเข้าใจหัวข้อนี้แล้ว</span></div></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tracker -->
+            <div class="prep-tracker">
+                <div class="prep-progress-container">
+                    <div style="display: flex; justify-content: space-between; font-size: 0.95rem; font-weight: 600;">
+                        <span class="purple-text">🛡️ ระดับความพร้อม</span>
+                        <span class="success-text" id="prep-percent-text">0%</span>
+                    </div>
+                    <div class="prep-progress-bar-bg">
+                        <div class="prep-progress-bar-fill" id="prep-progress-fill" style="background: linear-gradient(90deg, #10b981, #f59e0b);"></div>
+                    </div>
+                </div>
+                <a href="tgat3.html" class="btn-neon" id="ready-exam-btn" style="min-width: 250px; text-align: center;">🎯 เริ่มทำข้อสอบจริง</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const storageKey = 'checklist_state_tgat3';
+        const totalTabs = 4;
+        let checklistState = Array(totalTabs).fill(false);
+
+        // Load stored state if available
+        try {
+            const stored = localStorage.getItem(storageKey);
+            if (stored) {
+                checklistState = JSON.parse(stored);
+            }
+        } catch(e) {
+            console.error('Failed to parse checklist state', e);
+        }
+
+        function switchStudyTab(idx) {
+            for (let i = 0; i < totalTabs; i++) {
+                document.getElementById('study-panel-' + i).style.display = i === idx ? 'block' : 'none';
+                document.getElementById('tab-btn-' + i).classList.toggle('active', i === idx);
+            }
+        }
+
+        function toggleChecklist(idx) {
+            checklistState[idx] = !checklistState[idx];
+            
+            // Save state
+            try {
+                localStorage.setItem(storageKey, JSON.stringify(checklistState));
+            } catch(e) {
+                console.error('Failed to save checklist state', e);
+            }
+            
+            updateChecklistUI(idx);
+            updateStudyProgress();
+        }
+
+        function updateChecklistUI(idx) {
+            const btn = document.getElementById('checklist-btn-' + idx);
+            const tabBtn = document.getElementById('tab-btn-' + idx);
+            if (!btn || !tabBtn) return;
+            
+            if (checklistState[idx]) {
+                btn.classList.add('checked');
+                btn.querySelector('span').textContent = '[✔] เข้าใจแล้ว!';
+                tabBtn.classList.add('read-done');
+            } else {
+                btn.classList.remove('checked');
+                btn.querySelector('span').textContent = '[ ] ติ๊กเมื่อทำความเข้าใจหัวข้อนี้แล้ว';
+                tabBtn.classList.remove('read-done');
+            }
+        }
+
+        function updateStudyProgress() {
+            const completed = checklistState.filter(Boolean).length;
+            const percent = Math.round((completed / totalTabs) * 100);
+            document.getElementById('prep-percent-text').textContent = percent + '%';
+            document.getElementById('prep-progress-fill').style.width = percent + '%';
+        }
+
+        function toggleBookmark(btn, topicId) {
+            btn.classList.toggle('saved');
+            if (btn.classList.contains('saved')) {
+                btn.innerHTML = '🌟 Saved in Bookmarks';
+                localStorage.setItem('bookmark_' + topicId, 'true');
+            } else {
+                btn.innerHTML = '⭐ Save This Topic';
+                localStorage.removeItem('bookmark_' + topicId);
+            }
+        }
+        
+        
+        function showSimulationFeedback(choice) {
+            const feedbackBox = document.getElementById('simulation-feedback');
+            feedbackBox.style.display = 'block';
+            
+            if (choice === 'A') {
+                feedbackBox.style.background = 'rgba(244, 63, 94, 0.15)';
+                feedbackBox.style.border = '1px solid var(--danger)';
+                feedbackBox.innerHTML = '<span style="color:var(--danger);font-weight:bold;">❌ Mindset Analysis (1/3 คะแนน):</span> การบอกให้คนไข้ใจเย็นๆ มักจะทำให้เขาโกรธขึ้น และการอ้างถึง "คิวอื่น" เป็นการเปรียบเทียบที่ไม่ช่วยแก้ปัญหา';
+            } else if (choice === 'B') {
+                feedbackBox.style.background = 'rgba(16, 185, 129, 0.15)';
+                feedbackBox.style.border = '1px solid var(--success)';
+                feedbackBox.innerHTML = '<span style="color:var(--success);font-weight:bold;">✅ Mindset Analysis (3/3 คะแนน):</span> ยอดเยี่ยม! นี่คือหลักการ Validate Feelings คือการแสดงความเข้าใจอารมณ์ของคนไข้ก่อน แล้วจึงเสนอทางออก เป็นการทำ De-escalation ที่ถูกต้องที่สุด';
+            } else if (choice === 'C') {
+                feedbackBox.style.background = 'rgba(245, 158, 11, 0.15)';
+                feedbackBox.style.border = '1px solid var(--warning)';
+                feedbackBox.innerHTML = '<span style="color:var(--warning);font-weight:bold;">⚠️ Mindset Analysis (0/3 คะแนน):</span> การเงียบหนีปัญหา (Avoidance) ทำให้คนไข้รู้สึกถูกเมิน (Ignored) ซึ่งอาจนำไปสู่การร้องเรียนที่รุนแรงขึ้น';
+            }
+        }
+        
+
+        window.onload = () => {
+            const tabs = ['tgat3-p1', 'tgat3-p2', 'tgat3-p3', 'tgat3-p4'];
+            const btns = document.querySelectorAll('.btn-bookmark');
+            tabs.forEach((tab, index) => {
+                if (localStorage.getItem('bookmark_' + tab) && btns[index]) {
+                    btns[index].classList.add('saved');
+                    btns[index].innerHTML = '🌟 Saved in Bookmarks';
+                }
+            });
+            
+            // Load checklist UI states on page load
+            for (let i = 0; i < totalTabs; i++) {
+                updateChecklistUI(i);
+            }
+            updateStudyProgress();
+        }
+        </script>
+</body>
+</html>
